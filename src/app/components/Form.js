@@ -1,10 +1,16 @@
+import { IoClose } from "react-icons/io5";
+
 export default function Form() {
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-      <form className="w-full md:w-1/2 lg:w-1/3 mx-auto flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-lg font-[family-name:var(--font-geist-sans)]">
-        <h2 className="pb-5 font-bold  text-orange-500 text-xl">
+    <div className=" flex-col fixed inset-0 bg-black/60 flex items-center  justify-center">
+        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto flex flex-col items-center bg-gray-100 rounded-lg shadow-lg font-[family-name:var(--font-geist-sans)]">
+        <div className="w-full flex flex-row pt-4 justify-between px-6">
+        <h2 className=" font-bold text-orange-500 text-xl">
           Nova receita
         </h2>
+        <IoClose className="flex w-7 h-7 cursor-pointer"/>
+        </div>
+        <form className="w-full mx-auto flex flex-col items-center p-6  font-[family-name:var(--font-geist-sans)]">
         <div className="w-full mb-4">
           <label className="block text-gray-700 font-bold mb-2">
             Nome da receita
@@ -70,6 +76,7 @@ export default function Form() {
           Enviar Receita
         </button>
       </form>
+      </div>
     </div>
   );
 }
