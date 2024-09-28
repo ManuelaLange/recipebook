@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import bolodemilho from "../../img/bolodemilho.jpg";
 import cookie from "../../img/cookie.jpg";
 import strogonof from "../../img/strogonof.jpg";
@@ -15,20 +15,34 @@ export default function Home() {
   //   },
   // ]);
 
-  const [modalNewRecipe, SetModalNewRecipe] = useState(false)
+  const [categoryRecipes, setCategoryRecipes] = useState([
+    "Sobremesas",
+    "Sopas",
+    "Bebidas",
+    "Carnes",
+    "Massas",
+    "Bolos",
+  ]);
 
-  function NewRecipe (){
-    SetModalNewRecipe(true)
-    console.log("chamando")
+  const [modalNewRecipe, SetModalNewRecipe] = useState(false);
+
+  function NewRecipe() {
+    SetModalNewRecipe(true);
+    console.log("chamando");
+  }
+
+  function CloseModalRecipe() {
+    SetModalNewRecipe(false);
   }
 
   return (
     <div>
-      
-      
       <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <main className="mx-auto">Cadastre suas receitas</main>
-        <button onClick={NewRecipe} className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400">
+        <button
+          onClick={NewRecipe}
+          className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400"
+        >
           Adicionar nova receita
         </button>
       </div>
@@ -73,7 +87,12 @@ export default function Home() {
         </a>
       </div>
 
-      {modalNewRecipe && (<Form />)}
+      {modalNewRecipe && (
+        <Form
+          categoryRecipes={categoryRecipes}
+          closeModalFormRecipe={CloseModalRecipe}
+        />
+      )}
     </div>
   );
 }
