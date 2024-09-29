@@ -8,22 +8,6 @@ import Form from "./components/Form";
 import { useState } from "react";
 
 export default function Home() {
-  // const [recipes, setRecipes] = useState([
-  //   {
-  //     id: "1",
-  //     name: "ld",
-  //   },
-  // ]);
-
-  const [categoryRecipes, setCategoryRecipes] = useState([
-    "Sobremesas",
-    "Sopas",
-    "Bebidas",
-    "Carnes",
-    "Massas",
-    "Bolos",
-  ]);
-
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
 
   function NewRecipe() {
@@ -87,12 +71,7 @@ export default function Home() {
         </a>
       </div>
 
-      {modalNewRecipe && (
-        <Form
-          categoryRecipes={categoryRecipes}
-          closeModalFormRecipe={CloseModalRecipe}
-        />
-      )}
+      {modalNewRecipe && <Form closeModalFormRecipe={CloseModalRecipe} />}
     </div>
   );
 }
