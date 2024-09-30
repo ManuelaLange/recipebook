@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { CategoryContext } from "../categoryContext";
 import { useContext, useState } from "react";
+import { GiBookshelf } from "react-icons/gi";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
@@ -13,9 +14,9 @@ export default function Header() {
 
   const { categoryRecipes } = useContext(CategoryContext);
   return (
-    <header className="bg-orange-50 flex items-center justify-between">
+    <header className="h-12 bg-orange-50 flex items-center justify-between">
       <div className="flex items-center space-x-6 mx-6">
-        <Image alt="Logo" className="w-14 h-14" />
+        <GiBookshelf size={24} color="bg-orange-50" />
 
         <ul className="flex space-x-6 text-orange-500 font-semibold">
           {categoryRecipes.slice(0, 5).map((category) => {
@@ -37,7 +38,7 @@ export default function Header() {
                 Mais
               </button>
               {isDropdownMenuOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div className="origin-top-right absolute right-50 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div
                     className="py-1"
                     aria-orientation="vertical"
@@ -45,14 +46,11 @@ export default function Header() {
                   >
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-sm text-orange-600 hover:text-orange-700"
                     >
                       {categoryRecipes.slice(6).map((category) => {
                         return (
-                          <li
-                            key={category}
-                            className="hover:text-orange-600 cursor-pointer"
-                          >
+                          <li key={category} className="cursor-pointer">
                             {category}
                           </li>
                         );
@@ -63,30 +61,6 @@ export default function Header() {
               )}
             </div>
           )}
-          {/* <div className="relative inline-block text-left">
-            <button
-              onClick={toggleDropdown}
-              className="inline-flex justify-center w-full rounded-md  text-sm font-medium text-orange-500 font-semibold hover:text-orange-600 cursor-pointer"
-            >
-              Mais
-            </button>
-            {isDropdownMenuOpen && (
-              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                <div
-                  className="py-1"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
-                >
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Frutas
-                  </a>
-                </div>
-              </div>
-            )}
-          </div> */}
         </ul>
       </div>
 

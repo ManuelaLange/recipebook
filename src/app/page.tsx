@@ -5,18 +5,25 @@ import strogonof from "../../img/strogonof.jpg";
 import yakisoba from "../../img/yakisoba.jpeg";
 import Image from "next/image";
 import Form from "./components/Form";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { RecipeContext } from "./recipeContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
+  const { recipes, setRecipes } = useContext(RecipeContext);
+  const router = useRouter();
 
   function NewRecipe() {
     SetModalNewRecipe(true);
-    console.log("chamando");
   }
 
   function CloseModalRecipe() {
     SetModalNewRecipe(false);
+  }
+
+  function handleRecipePage(recipe: { name: string; id: string }) {
+    router.push(`/recipe/${recipe.name}`);
   }
 
   return (
@@ -35,7 +42,10 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        <button className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500">
+        <button
+          onClick={() => handleRecipePage(recipes[0])}
+          className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
+        >
           <Image
             src={bolodemilho}
             alt="Ícone 1"
@@ -43,7 +53,10 @@ export default function Home() {
           />
           <p>Bolo de milho</p>
         </button>
-        <button className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500 ">
+        <button
+          onClick={() => handleRecipePage(recipes[1])}
+          className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500 "
+        >
           <Image src={cookie} alt="Ícone 2" className="w-18 h-18 rounded-lg" />
           <p>Cookies</p>
         </button>

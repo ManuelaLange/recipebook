@@ -6,7 +6,7 @@ import { RecipeContext } from "../recipeContext";
 
 export default function Form({ closeModalFormRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
-  const { recipe, setRecipe } = useContext(RecipeContext);
+  const { recipes, setRecipes } = useContext(RecipeContext);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -26,7 +26,7 @@ export default function Form({ closeModalFormRecipe }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    setRecipe([...recipe, formData]);
+    setRecipes([...recipes, formData]);
     console.log("nova receita:", formData);
 
     setFormData({
