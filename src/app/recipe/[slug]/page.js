@@ -7,8 +7,9 @@ import { IoMdArrowBack } from "react-icons/io";
 export default function Page({ params }) {
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
-  const pageRecipe = recipes.find((recipe) => recipe.id === params.slug);
+  const pageRecipe = recipes.find((recipe) => recipe.pageName === params.slug);
   console.log("page", pageRecipe);
+  console.log("params", params);
 
   return (
     <div>
@@ -24,8 +25,10 @@ export default function Page({ params }) {
       >
         voltar
       </span>
-      {/* RECEITA: {JSON.stringify(pageRecipe)} {params.slug} <br /> */}
-      {params.slug}
+      <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
+        {/* RECEITA: {JSON.stringify(pageRecipe)} {params.slug} <br /> */}
+        {params.slug}
+      </div>
     </div>
   );
 }

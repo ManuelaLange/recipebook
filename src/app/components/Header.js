@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { CategoryContext } from "../categoryContext";
 import { useContext, useState } from "react";
 import { GiBookshelf } from "react-icons/gi";

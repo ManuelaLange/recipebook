@@ -1,13 +1,15 @@
 "use client";
-import bolodemilho from "../../img/bolodemilho.jpg";
-import cookie from "../../img/cookie.jpg";
-import strogonof from "../../img/strogonof.jpg";
-import yakisoba from "../../img/yakisoba.jpeg";
-import Image from "next/image";
 import Form from "./components/Form";
 import { useState, useContext } from "react";
 import { RecipeContext } from "./recipeContext";
 import { useRouter } from "next/navigation";
+
+interface Recipe {
+  id: string;
+  name: string;
+  img: string;
+  pageName: string;
+}
 
 export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
@@ -22,8 +24,8 @@ export default function Home() {
     SetModalNewRecipe(false);
   }
 
-  function handleRecipePage(recipe: { name: string; id: string }) {
-    router.push(`/recipe/${recipe.name}`);
+  function handleRecipePage(recipe: { id: string; pageName: string }) {
+    router.push(`/recipe/${recipe.pageName}`);
   }
 
   return (
@@ -37,52 +39,31 @@ export default function Home() {
           Adicionar nova receita
         </button>
       </div>
-      <div className="max-w-screen-lg mx-auto mb-4 font-[family-name:var(--font-geist-sans)]">
-        <h4 className="mx-auto">Adicionadas recentemente</h4>
-      </div>
-
-      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        <button
-          onClick={() => handleRecipePage(recipes[0])}
-          className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
-        >
-          <Image
-            src={bolodemilho}
-            alt="Ícone 1"
-            className="w-18 h-18 rounded-lg"
-          />
-          <p>Bolo de milho</p>
-        </button>
-        <button
-          onClick={() => handleRecipePage(recipes[1])}
-          className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500 "
-        >
-          <Image src={cookie} alt="Ícone 2" className="w-18 h-18 rounded-lg" />
-          <p>Cookies</p>
-        </button>
-        <button className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500">
-          <Image
-            src={strogonof}
-            alt="Ícone 3"
-            className="w-18 h-18 rounded-lg"
-          />
-          <p>Strogonoff de frango</p>
-        </button>
-        <button className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500">
-          <Image
-            src={yakisoba}
-            alt="Ícone 4"
-            className="w-18 h-18 rounded-lg"
-          />
-          <p className="">Yakisoba</p>
-        </button>
-      </div>
-
-      <div className="max-w-screen-lg mx-auto mb-4 font-[family-name:var(--font-geist-sans)]">
-        <a className="ml-auto text-orange-500 underline block text-right cursor-pointer hover:text-orange-600">
+      <div className="flex flex-grow max-w-screen-lg justify-between m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
+        <h4 className=" ">Adicionadas recentemente</h4>
+        <a className=" text-orange-500 underline block text-right cursor-pointer hover:text-orange-600">
           Acessar todas
         </a>
       </div>
+
+      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+        {recipes.map((recipe: Recipe) => {
+          return (
+            <button
+              key={recipe.id}
+              onClick={() =>
+                handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
+              }
+              className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
+            >
+              <img className="w-36 h-28 rounded-lg w-" src={recipe.img}></img>
+              <p>{recipe.name}</p>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="max-w-screen-lg mx-auto mb-4 font-[family-name:var(--font-geist-sans)]"></div>
 
       {modalNewRecipe && <Form closeModalFormRecipe={CloseModalRecipe} />}
     </div>
