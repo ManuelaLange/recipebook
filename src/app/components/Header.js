@@ -1,40 +1,66 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { CategoryContext } from "../categoryContext";
-import { useContext, useState } from "react";
-import { GiBookshelf } from "react-icons/gi";
+import { useContext, useState, useRef, useEffect } from "react";
+import { FaBook } from "react-icons/fa";
+import { GoChevronDown } from "react-icons/go";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
+  const divRef = useRef(null);
+  const router = useRouter();
 
   function toggleDropdown() {
     setIsDropdownOpen((prevState) => !prevState);
+    
   }
 
+  useEffect(()=> {
+    const handleClickOutside = (event) => {
+      if (divRef.current && !divRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return()=> {
+      document.removeEventListener("click", handleClickOutside)
+    }
+  },[divRef])
+
   const { categoryRecipes } = useContext(CategoryContext);
+
+  function handleFilterRecipePage({title}) {
+    router.push(`/recipefilter/${title}`);
+  }
+
   return (
-    <header className="h-12 bg-orange-50 flex items-center justify-between">
+    <header className="h-12 bg-orange-100 flex items-center justify-between">
       <div className="flex items-center space-x-6 mx-6">
-        <GiBookshelf size={24} color="bg-orange-50" />
+        <FaBook size={24} style={{color:"#f97316"}} />
 
         <ul className="flex space-x-6 text-orange-500 font-semibold">
           {categoryRecipes.slice(0, 5).map((category) => {
             return (
               <li
-                key={category}
+                key={category.title}
                 className="hover:text-orange-600 cursor-pointer"
+                onClick={() =>
+                  handleFilterRecipePage({ title: category.title, name: category.name })
+                }
               >
-                {category}
+                {category.name}
               </li>
             );
           })}
           {categoryRecipes.length > 5 && (
-            <div className="relative inline-block text-left">
+            <div ref={divRef} className="relative inline-block text-left justify-center">
               <button
                 onClick={toggleDropdown}
-                className="inline-flex justify-center w-full rounded-md  text-sm font-medium text-orange-500 font-semibold hover:text-orange-600 cursor-pointer"
+                className="inline-flex justify-center w-full rounded-md  text-sm font-medium text-orange-500 hover:text-orange-600 cursor-pointer"
               >
-                Mais
+                Mais <GoChevronDown className="ml-0.5 flex size-5 items-center"/>
+
               </button>
               {isDropdownMenuOpen && (
                 <div className="origin-top-right absolute right-50 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
@@ -45,12 +71,12 @@ export default function Header() {
                   >
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-orange-600 hover:text-orange-700"
+                      className="block px-4 py-2 text-sm text-orange-500 "
                     >
-                      {categoryRecipes.slice(6).map((category) => {
+                      {categoryRecipes.slice(5).map((category) => {
                         return (
-                          <li key={category} className="cursor-pointer">
-                            {category}
+                          <li key={category.title} className="cursor-pointer hover:text-orange-600 mb-2  border-b-2 divide-indigo-500">
+                            {category.name}
                           </li>
                         );
                       })}

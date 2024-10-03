@@ -6,14 +6,32 @@ const CategoryContext = createContext();
 
 const CategoryProvider = ({ children }) => {
   const [categoryRecipes, setCategoryRecipes] = useState([
-    "Sobremesas",
-    "Sopas",
-    "Bebidas",
-    "Carnes",
-    "Massas",
-    "Bolos",
-    "Frutas",
-  ]);
+    {
+    title:"prato-principal",
+    name:"Prato principal",
+    },
+    {
+    title:"sobremesas",
+    name:"Sobremesas",
+    },
+    {
+    title:"sopas",
+    name:"Sopas",
+    },
+    {
+    title:"carnes",
+    name:"Carnes",
+    },
+    {
+    title:"bolos",
+    name:"Bolos",
+    },
+    {
+    title:"massas",
+    name:"Massas",
+    }
+
+    ]);
   return (
     <CategoryContext.Provider value={{ categoryRecipes, setCategoryRecipes }}>
       {children}

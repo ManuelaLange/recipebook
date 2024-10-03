@@ -82,8 +82,8 @@ export default function Form({ closeModalFormRecipe }) {
               <option value="">Selecione a categoria</option>
               {categoryRecipes.map((category) => {
                 return (
-                  <option key={category} value={category}>
-                    {category}
+                  <option key={category.title} value={category.name}>
+                    {category.name}
                   </option>
                 );
               })}
