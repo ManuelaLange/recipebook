@@ -10,7 +10,8 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "bolo-de-milho",
       name: "Bolo de milho",
-      category: "Bolo",
+      category: "Bolos",
+      categoryValue: "bolos",
       time: "50 min",
       ingredients: [
         "1 lata de milho",
@@ -41,7 +42,8 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "cookie",
       name: "Cookie",
-      category: "Doce",
+      category: "Sobremesas",
+      categoryValue: "sobremesas",
       time: "25 min",
       ingredients: [
         "2 xícaras de farinha de trigo",
@@ -69,6 +71,7 @@ const RecipeProvider = ({ children }) => {
       pageName: "strogonoff-de-frango",
       name: "Strogonoff de Frango",
       category: "Prato Principal",
+      categoryValue: "prato-principal",
       time: "40 min",
       ingredients: [
         "500g de peito de frango em cubos",
@@ -95,7 +98,7 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "yakisoba",
       name: "Yakisoba",
-      category: "Prato Principal",
+      categoryValue: "prato-principal",
       time: "30 min",
       ingredients: [
         "200g de macarrão para yakisoba",
@@ -126,7 +129,7 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "panqueca-de-carne",
       name: "Panqueca de Carne",
-      category: "Prato Principal",
+      categoryValue: "prato-principal",
       time: "40 min",
       ingredients: [
         "1 xícara de leite",

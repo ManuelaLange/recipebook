@@ -8,6 +8,7 @@ export default function Form({ closeModalFormRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
   const { recipes, setRecipes } = useContext(RecipeContext);
   const [formData, setFormData] = useState({
+    id: uuidv4(),
     name: "",
     category: "",
     time: "",

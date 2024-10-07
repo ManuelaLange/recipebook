@@ -5,39 +5,52 @@ import { CategoryContext } from "../categoryContext";
 import { useContext, useState, useRef, useEffect } from "react";
 import { FaBook } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
+import { RecipeContext } from "../recipeContext";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef(null);
   const router = useRouter();
+  const { categoryRecipes } = useContext(CategoryContext);
+  const [search, setSearch] = useState("");
+  const { recipes } = useContext(RecipeContext);
+
+  const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
+
+  const searchRecipe = recipes.filter((recipe) =>
+    recipe.name.toLowerCase().includes(lowerSearch)
+  );
+  console.log(searchRecipe);
 
   function toggleDropdown() {
     setIsDropdownOpen((prevState) => !prevState);
-    
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (divRef.current && !divRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
-    return()=> {
-      document.removeEventListener("click", handleClickOutside)
-    }
-  },[divRef])
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [divRef]);
 
-  const { categoryRecipes } = useContext(CategoryContext);
-
-  function handleFilterRecipePage({title}) {
+  function handleFilterRecipePage({ title }) {
     router.push(`/recipefilter/${title}`);
   }
 
   return (
     <header className="h-12 bg-orange-100 flex items-center justify-between">
       <div className="flex items-center space-x-6 mx-6">
-        <FaBook size={24} style={{color:"#f97316"}} />
+        <FaBook
+          onClick={() => router.push("/")}
+          className="hover:text-orange-600 cursor-pointer"
+          size={24}
+          style={{ color: "#f97316" }}
+        />
 
         <ul className="flex space-x-6 text-orange-500 font-semibold">
           {categoryRecipes.slice(0, 5).map((category) => {
@@ -45,22 +58,23 @@ export default function Header() {
               <li
                 key={category.title}
                 className="hover:text-orange-600 cursor-pointer"
-                onClick={() =>
-                  handleFilterRecipePage({ title: category.title, name: category.name })
-                }
+                onClick={() => handleFilterRecipePage(category)}
               >
                 {category.name}
               </li>
             );
           })}
           {categoryRecipes.length > 5 && (
-            <div ref={divRef} className="relative inline-block text-left justify-center">
+            <div
+              ref={divRef}
+              className="relative inline-block text-left justify-center"
+            >
               <button
                 onClick={toggleDropdown}
                 className="inline-flex justify-center w-full rounded-md  text-sm font-medium text-orange-500 hover:text-orange-600 cursor-pointer"
               >
-                Mais <GoChevronDown className="ml-0.5 flex size-5 items-center"/>
-
+                Mais{" "}
+                <GoChevronDown className="ml-0.5 flex size-5 items-center" />
               </button>
               {isDropdownMenuOpen && (
                 <div className="origin-top-right absolute right-50 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
@@ -75,7 +89,10 @@ export default function Header() {
                     >
                       {categoryRecipes.slice(5).map((category) => {
                         return (
-                          <li key={category.title} className="cursor-pointer hover:text-orange-600 mb-2  border-b-2 divide-indigo-500">
+                          <li
+                            key={category.title}
+                            className="cursor-pointer hover:text-orange-600 mb-2  border-b-2 divide-indigo-500"
+                          >
                             {category.name}
                           </li>
                         );
@@ -94,6 +111,8 @@ export default function Header() {
           type="text"
           placeholder="Buscar..."
           className="px-4 py-1 border rounded-lg text-gray-600"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <button className="bg-orange-500 text-white px-4 py-1 rounded-lg hover:bg-orange-400">
           Pesquisar
