@@ -156,8 +156,27 @@ const RecipeProvider = ({ children }) => {
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp4f4dXhrvU0aDcQoCmtbWjyZbCpQPZtdviA&s",
     },
   ]);
+  const addRecipe = ({ name, category, time, ingredients, instructions }) => {
+    const id = uuidv4(); // gera um ID único
+    const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
+    const categoryValue = category.toLowerCase(); // transforma a categoria em lowercase para fins de consistência
+
+    const newRecipe = {
+      id,
+      pageName,
+      name,
+      category,
+      categoryValue,
+      time,
+      ingredients,
+      instructions,
+    };
+
+    setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
+  };
+
   return (
-    <RecipeContext.Provider value={{ recipes, setRecipes }}>
+    <RecipeContext.Provider value={{ recipes, addRecipe }}>
       {children}
     </RecipeContext.Provider>
   );

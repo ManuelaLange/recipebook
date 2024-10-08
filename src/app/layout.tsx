@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import { CategoryProvider } from "./categoryContext";
 import { RecipeProvider } from "./recipeContext";
+import { SearchProvider } from "./searchContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,14 +31,16 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{background: "rgb(250 250 250)"}}
+        style={{ background: "rgb(250 250 250)" }}
       >
-        <RecipeProvider>
-          <CategoryProvider>
-            <Header />
-            {children}
-          </CategoryProvider>
-        </RecipeProvider>
+        <SearchProvider>
+          <RecipeProvider>
+            <CategoryProvider>
+              <Header />
+              {children}
+            </CategoryProvider>
+          </RecipeProvider>
+        </SearchProvider>
       </body>
     </html>
   );

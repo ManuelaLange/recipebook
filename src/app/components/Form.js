@@ -6,14 +6,13 @@ import { RecipeContext } from "../recipeContext";
 
 export default function Form({ closeModalFormRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
-  const { recipes, setRecipes } = useContext(RecipeContext);
+  const { recipes, addRecipe } = useContext(RecipeContext);
   const [formData, setFormData] = useState({
-    id: uuidv4(),
     name: "",
-    category: "",
+    category: [],
     time: "",
-    ingredients: "",
-    instructions: "",
+    ingredients: [],
+    instructions: [],
   });
 
   function handleInputChange(e) {
@@ -26,16 +25,19 @@ export default function Form({ closeModalFormRecipe }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    addRecipe(formData);
 
-    setRecipes([...recipes, formData]);
     console.log("nova receita:", formData);
 
     setFormData({
+      id: "",
+      pageName: "",
       name: "",
-      category: "",
+      category: [],
+      categoryValue: [],
       time: "",
-      ingredients: "",
-      instructions: "",
+      ingredients: [],
+      instructions: [],
     });
   }
 

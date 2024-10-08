@@ -3,6 +3,7 @@ import Form from "./components/Form";
 import { useState, useContext } from "react";
 import { RecipeContext } from "./recipeContext";
 import { useRouter } from "next/navigation";
+import { SearchContext } from "./searchContext";
 
 interface Recipe {
   id: string;
@@ -13,8 +14,16 @@ interface Recipe {
 
 export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
-  const { recipes, setRecipes } = useContext(RecipeContext);
+  const { recipes, addRecipe } = useContext(RecipeContext);
   const router = useRouter();
+  const { search, setSearch } = useContext(SearchContext);
+
+  const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
+
+  const searchRecipe = recipes.filter((recipe: { name: string }) =>
+    recipe.name.toLowerCase().includes(lowerSearch)
+  );
+  console.log({ searchRecipe });
 
   function NewRecipe() {
     SetModalNewRecipe(true);
@@ -47,7 +56,7 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        {recipes.map((recipe: Recipe) => {
+        {searchRecipe.map((recipe: Recipe) => {
           return (
             <button
               key={recipe.id}
