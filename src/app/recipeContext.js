@@ -156,6 +156,7 @@ const RecipeProvider = ({ children }) => {
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp4f4dXhrvU0aDcQoCmtbWjyZbCpQPZtdviA&s",
     },
   ]);
+
   const addRecipe = ({ name, category, time, ingredients, instructions }) => {
     const id = uuidv4(); // gera um ID único
     const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
@@ -176,7 +177,7 @@ const RecipeProvider = ({ children }) => {
   };
 
   return (
-    <RecipeContext.Provider value={{ recipes, addRecipe }}>
+    <RecipeContext.Provider value={{ recipes, setRecipes, addRecipe }}>
       {children}
     </RecipeContext.Provider>
   );

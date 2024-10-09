@@ -3,13 +3,14 @@ import { IoClose } from "react-icons/io5";
 import { CategoryContext } from "../categoryContext";
 import { useContext, useState } from "react";
 import { RecipeContext } from "../recipeContext";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Form({ closeModalFormRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
   const { recipes, addRecipe } = useContext(RecipeContext);
   const [formData, setFormData] = useState({
     name: "",
-    category: [],
+    category: "",
     time: "",
     ingredients: [],
     instructions: [],
@@ -30,16 +31,14 @@ export default function Form({ closeModalFormRecipe }) {
     console.log("nova receita:", formData);
 
     setFormData({
-      id: "",
-      pageName: "",
       name: "",
-      category: [],
-      categoryValue: [],
+      category: "",
       time: "",
       ingredients: [],
       instructions: [],
     });
   }
+  console.log({ recipes });
 
   return (
     <div className=" flex-col pt-10 fixed inset-0 bg-black/60 flex items-center justify-center overflow-y-auto">
@@ -139,7 +138,7 @@ export default function Form({ closeModalFormRecipe }) {
           </div>
 
           <div className="w-full mb-2 flex flex-col">
-            <label className="text-gray-700 font-bold" for="imageInput">
+            <label className="text-gray-700 font-bold" htmlFor="imageInput">
               Anexar Imagem:
             </label>
             <input type="file" id="imageInput" accept="image/*"></input>
