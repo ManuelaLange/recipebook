@@ -3,7 +3,6 @@ import { IoClose } from "react-icons/io5";
 import { CategoryContext } from "../categoryContext";
 import { useContext, useState } from "react";
 import { RecipeContext } from "../recipeContext";
-import { v4 as uuidv4 } from "uuid";
 
 export default function Form({ closeModalFormRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
@@ -12,9 +11,11 @@ export default function Form({ closeModalFormRecipe }) {
     name: "",
     category: "",
     time: "",
-    ingredients: [],
-    instructions: [],
+    ingredients: [""],
+    instructions: [""],
   });
+
+  const [addIngredients, setAddIngredients] = useState("");
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -22,6 +23,20 @@ export default function Form({ closeModalFormRecipe }) {
       ...formData,
       [name]: value,
     });
+    console.log({ name, value });
+  }
+
+  function handleInputIngredients(e) {
+    const value = e.target.value;
+    setAddIngredients(value);
+  }
+
+  function addNewIngredient() {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ingredients: [...prevFormData.ingredients, addIngredients], // Adiciona o novo ingrediente ao array
+    }));
+    console.log(formData);
   }
 
   function handleSubmit(e) {
@@ -34,11 +49,10 @@ export default function Form({ closeModalFormRecipe }) {
       name: "",
       category: "",
       time: "",
-      ingredients: [],
-      instructions: [],
+      ingredients: [""],
+      instructions: [""],
     });
   }
-  console.log({ recipes });
 
   return (
     <div className=" flex-col pt-10 fixed inset-0 bg-black/60 flex items-center justify-center overflow-y-auto">
@@ -111,16 +125,22 @@ export default function Form({ closeModalFormRecipe }) {
             <label className="block text-gray-700 font-bold mb-2">
               Ingredientes
             </label>
+
             <input
-              required
               name="ingredients"
               type="text"
               placeholder="Ingrediente"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
-              value={formData.ingredients}
-              onChange={handleInputChange}
+              onChange={handleInputIngredients}
             />
+            <button type="button" onClick={addNewIngredient}>
+              Adicionar Ingrediente
+            </button>
           </div>
+          {formData.ingredients.length > 0 &&
+            formData.ingredients.map((ingredient, index) => {
+              return <div key={index}>{ingredient} </div>;
+            })}
 
           <div className="w-full mb-2">
             <label className="block text-gray-700 font-bold mb-2">
@@ -155,3 +175,8 @@ export default function Form({ closeModalFormRecipe }) {
     </div>
   );
 }
+
+//setFormData((prevFormData) => ({
+//  ...prevFormData,
+//  ingredients: [value], // Adiciona o novo ingrediente ao array
+//}));

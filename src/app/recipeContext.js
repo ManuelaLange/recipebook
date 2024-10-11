@@ -98,6 +98,7 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "yakisoba",
       name: "Yakisoba",
+      category: "Prato Principal",
       categoryValue: "prato-principal",
       time: "30 min",
       ingredients: [
@@ -129,6 +130,7 @@ const RecipeProvider = ({ children }) => {
       id: uuidv4(),
       pageName: "panqueca-de-carne",
       name: "Panqueca de Carne",
+      category: "Prato Principal",
       categoryValue: "prato-principal",
       time: "40 min",
       ingredients: [
@@ -160,7 +162,7 @@ const RecipeProvider = ({ children }) => {
   const addRecipe = ({ name, category, time, ingredients, instructions }) => {
     const id = uuidv4(); // gera um ID único
     const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
-    const categoryValue = category.toLowerCase(); // transforma a categoria em lowercase para fins de consistência
+    const categoryValue = category.toLowerCase().replace(/\s+/g, "-"); // transforma a categoria em lowercase para fins de consistência
 
     const newRecipe = {
       id,
