@@ -15,5 +15,7 @@ const SearchProvider = ({ children }) => {
 export { SearchProvider, SearchContext };
 
 //fazer as novas receitas cadastradas no form enviarem para o localstorage
-//editar receita
-// fazer icone de lixo nos ingredientes e modo de preparo
+// editar ingrediente
+
+
+

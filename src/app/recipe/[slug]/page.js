@@ -59,16 +59,21 @@ export default function Page({ params }) {
         </div>
       </div>
 
-      <div className="flex flex-col items-center p-3 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
+      <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
+        <div>
         <h1 className="my-3 font-semibold text-3xl text-orange-500">
           {pageRecipe.name}
         </h1>
-        <h1 className="mb-3 text-base text-orange-500">
-          {pageRecipe.category}
+        <h1 className="mb-3 text-center text-base text-orange-500">
+          Categoria: {pageRecipe.category}
         </h1>
-
+        <h1 className="mb-3 text-center text-base text-orange-500">
+          Tempo de preparo: {pageRecipe.time}
+        </h1>
+        </div>
+        <div className="flex flex-row justify-between w-full items-center">
         <div
-          className="bg-center bg-cover mx-10 w-5/12 h-80"
+          className="bg-center bg-cover mx-10 w-3/5 h-80"
           style={{
             backgroundImage: `url(${pageRecipe.img})`,
             borderRadius: "10%",
@@ -90,6 +95,9 @@ export default function Page({ params }) {
             </ul>
           </div>
         </div>
+
+        </div>
+
         <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
           <div>
             <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">

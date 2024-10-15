@@ -5,9 +5,10 @@ import { useContext, useState } from "react";
 import { RecipeContext } from "../recipeContext";
 import { CiCirclePlus } from "react-icons/ci";
 import { useEffect } from "react";
+import { BiEditAlt } from "react-icons/bi";
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function Form({ closeModalFormRecipe, recipe }) {
-  console.log("dfdfdsfs", recipe);
 
   const { isEditable, setIsEditable } = useState(false);
   const { categoryRecipes } = useContext(CategoryContext);
@@ -23,6 +24,9 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
   const [addIngredients, setAddIngredients] = useState("");
   const [addInstrucitons, setAddInstructions] = useState("");
+  const [isHovered, setIsHovered] = useState(null); 
+
+ 
 
   useEffect(() => {
     if (recipe) {
@@ -52,6 +56,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
   }
 
   function addNewIngredient() {
+   if(isEditable){ 
     if (!addIngredients.length) {
       alert("Adicione um ingrediente");
     } else {
@@ -61,8 +66,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       }));
     }
     console.log(formData);
-  }
+  }}
+
   function addNewInstructions() {
+    if(isEditable){
     if (!addInstrucitons.length) {
       alert("Adicione o modo de preparo");
     } else {
@@ -72,7 +79,8 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       }));
     }
     console.log(formData);
-  }
+  }}
+
   function handleKeyPressIngredients(e) {
     if (e.key === "Enter" && e.target === document.activeElement) {
       addNewIngredient();
@@ -85,6 +93,32 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       e.preventDefault();
     }
   }
+
+
+function handleEditIngredient(index){
+
+
+}
+function handleEditInstruction(index){
+
+}
+
+function handleDeleteInstruction(index){
+
+}
+
+function handleDeleteIngredient( index){
+  const updatedIngredients = formData.ingredients.filter(
+    (ingredient, i) => i !== index );
+ 
+
+  setFormData({
+    ...formData,
+    ingredients: updatedIngredients,
+  });
+}
+
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -105,9 +139,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       rec.id === editingRecipeId ? { ...rec, ...formData } : rec
     );
     setRecipes(updatedRecipes); // Atualiza o estado com a lista de receitas editada
-    setIsEditing(false); // Sai do modo de edição
     setEditingRecipeId(null);
-    console.log(updatedRecipes);
+    closeModalFormRecipe();
+
+    console.log("receita atualizada", updatedRecipes);
   }
 
   const handleKeyDown = (event) => {
@@ -130,7 +165,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
           />
         </div>
         <form
-          onSubmit={isEditable ? handleEditRecipe : handleSubmit}
+          onSubmit={!isEditable ? handleEditRecipe : handleSubmit}
           onKeyDown={handleKeyDown}
           className="w-full mx-auto flex flex-col items-center px-6 py-3 font-[family-name:var(--font-geist-sans)]"
         >
@@ -193,7 +228,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
             <div className="flex flex-row gap-1">
               <input
-                required
+    
                 name="ingredients"
                 type="text"
                 placeholder="Ingrediente"
@@ -209,12 +244,19 @@ export default function Form({ closeModalFormRecipe, recipe }) {
               {formData.ingredients.length > 0 &&
                 formData.ingredients.map((ingredient, index) => {
                   return (
+                    <div 
+                    onMouseEnter={() => setIsHovered(index)}
+                    onMouseLeave={() => setIsHovered(null)}
+                      className="flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300" key={index}>
                     <p
-                      key={index}
-                      className="w-full px-3 py-2 border rounded-md border-gray-300"
+                      className="w-full"
+                      
                     >
                       {ingredient}
                     </p>
+                    {isHovered=== index  && <BiEditAlt onClick={handleEditIngredient} size={22} className="text-gray-500 cursor-pointer"/> } 
+                    {isHovered===index && <MdDeleteOutline onClick={() => handleDeleteIngredient(index)} size={22} className="text-red-500 cursor-pointer" />}
+                    </div>
                   );
                 })}
             </div>
@@ -226,11 +268,11 @@ export default function Form({ closeModalFormRecipe, recipe }) {
             </label>
             <div className="flex flex-row gap-1">
               <input
-                required
+                
                 name="instructions"
                 type="text"
                 placeholder="Passo a passo da receita"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
+                className="w-full px-3 py-2 border mb-1 border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                 onChange={handleInputInstructions}
                 onKeyUp={handleKeyPressInstrucitons}
               />
@@ -242,12 +284,20 @@ export default function Form({ closeModalFormRecipe, recipe }) {
               {formData.instructions.length > 0 &&
                 formData.instructions.map((instruction, index) => {
                   return (
-                    <p
-                      key={index}
-                      className="w-full px-3 py-2 border rounded-md border-gray-300"
+                    <div  onMouseEnter={() => setIsHovered(index)}
+                    onMouseLeave={() => setIsHovered(null)} className=" flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300" key={index}>
+                    <p className="w-full"
+                     
                     >
                       {instruction}
                     </p>
+                    <div className="flex gap-2">
+        {isHovered=== index  && <BiEditAlt onClick={handleEditInstruction} size={22} className="text-gray-500 cursor-pointer"/> } 
+        {isHovered===index && <MdDeleteOutline onClick={handleDeleteInstruction} size={22} className="text-red-500 cursor-pointer" />}
+        
+      </div>
+                    </div>
+
                   );
                 })}
             </div>
