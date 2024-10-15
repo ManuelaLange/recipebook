@@ -92,7 +92,7 @@ const RecipeProvider = ({ children }) => {
         "Ajuste o sal e a pimenta a gosto.",
         "Sirva com arroz branco e batata palha.",
       ],
-      img: "https://s2-receitas.glbimg.com/1EvgesvUMInKftWfkHKQKf6D9FI=/0x0:1280x800/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_1f540e0b94d8437dbbc39d567a1dee68/internal_photos/bs/2022/8/O/xH9h1GSnW1LhMobyL7hQ/strogonoff-de-frango-receita.jpg",
+      img: "https://www.unileverfoodsolutions.com.br/dam/global-ufs/mcos/SLA/calcmenu/recipes/BR-recipes/chicken-&-other-poultry-dishes/strogonoff-de-frango/main-header.jpg",
     },
     {
       id: uuidv4(),

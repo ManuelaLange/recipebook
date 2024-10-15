@@ -14,5 +14,6 @@ const SearchProvider = ({ children }) => {
 };
 export { SearchProvider, SearchContext };
 
-// arrumar tamanho da imagem na pagina da receita
 //fazer as novas receitas cadastradas no form enviarem para o localstorage
+//editar receita
+// fazer icone de lixo nos ingredientes e modo de preparo

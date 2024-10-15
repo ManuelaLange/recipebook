@@ -4,14 +4,10 @@ import { CategoryContext } from "../categoryContext";
 import { useContext, useState } from "react";
 import { RecipeContext } from "../recipeContext";
 import { CiCirclePlus } from "react-icons/ci";
-import { useEffect } from "react";
 
-export default function Form({ closeModalFormRecipe, recipe }) {
-  console.log("dfdfdsfs", recipe);
-
-  const { isEditable, setIsEditable } = useState(false);
+export default function Form({ closeModalFormEditRecipe }) {
   const { categoryRecipes } = useContext(CategoryContext);
-  const { recipes, addRecipe, setRecipes } = useContext(RecipeContext);
+  const { recipes, addRecipe } = useContext(RecipeContext);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -19,17 +15,9 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     ingredients: [],
     instructions: [],
   });
-  const [editingRecipeId, setEditingRecipeId] = useState(null);
 
   const [addIngredients, setAddIngredients] = useState("");
   const [addInstrucitons, setAddInstructions] = useState("");
-
-  useEffect(() => {
-    if (recipe) {
-      setFormData(recipe);
-      setEditingRecipeId(recipe.id);
-    }
-  }, [recipe]);
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -37,6 +25,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       ...formData,
       [name]: value,
     });
+    console.log({ name, value });
   }
 
   function handleInputIngredients(e) {
@@ -100,15 +89,6 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       instructions: [""],
     });
   }
-  function handleEditRecipe() {
-    const updatedRecipes = recipes.map((rec) =>
-      rec.id === editingRecipeId ? { ...rec, ...formData } : rec
-    );
-    setRecipes(updatedRecipes); // Atualiza o estado com a lista de receitas editada
-    setIsEditing(false); // Sai do modo de edição
-    setEditingRecipeId(null);
-    console.log(updatedRecipes);
-  }
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -120,17 +100,15 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     <div className=" flex-col pt-10 fixed inset-0 bg-black/60 flex items-center justify-center">
       <div className="my-4 w-full md:w-1/2 lg:w-1/3 mx-auto flex flex-col items-center max-h-screen overflow-y-auto bg-gray-100 rounded-lg shadow-lg font-[family-name:var(--font-geist-sans)]">
         <div className="w-full flex flex-row pt-4 justify-between px-6">
-          <h2 className=" font-bold text-orange-500 text-xl">
-            {!isEditable ? "Editar" : "Nova"} receita
-          </h2>
+          <h2 className=" font-bold text-orange-500 text-xl">Editar receita</h2>
 
           <IoClose
-            onClick={closeModalFormRecipe}
+            onClick={closeModalFormEditRecipe}
             className="flex w-7 h-7 cursor-pointer"
           />
         </div>
         <form
-          onSubmit={isEditable ? handleEditRecipe : handleSubmit}
+          onSubmit={handleSubmit}
           onKeyDown={handleKeyDown}
           className="w-full mx-auto flex flex-col items-center px-6 py-3 font-[family-name:var(--font-geist-sans)]"
         >
@@ -264,7 +242,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
             type="submit"
             className="w-full bg-orange-500 text-white font-bold py-2 rounded-md hover:bg-orange-600 transition duration-300"
           >
-            {!isEditable ? "Editar" : "Enviar"} Receita
+            Enviar Receita
           </button>
         </form>
       </div>

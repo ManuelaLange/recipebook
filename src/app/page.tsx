@@ -23,7 +23,6 @@ export default function Home() {
   const searchRecipe = recipes.filter((recipe: { name: string }) =>
     recipe.name.toLowerCase().includes(lowerSearch)
   );
-  console.log({ searchRecipe });
 
   function NewRecipe() {
     SetModalNewRecipe(true);
@@ -71,8 +70,6 @@ export default function Home() {
           );
         })}
       </div>
-
-      <div className="max-w-screen-lg mx-auto mb-4 font-[family-name:var(--font-geist-sans)]"></div>
 
       {modalNewRecipe && <Form closeModalFormRecipe={CloseModalRecipe} />}
     </div>

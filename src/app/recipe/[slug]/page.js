@@ -1,41 +1,72 @@
 "use client";
 import { RecipeContext } from "../../recipeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoMdArrowBack } from "react-icons/io";
+import { BiEditAlt } from "react-icons/bi";
+import Form from "../../components/Form";
 
 export default function Page({ params }) {
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
   const pageRecipe = recipes.find((recipe) => recipe.pageName === params.slug);
-  console.log("page", pageRecipe);
-  console.log("params", params);
+
+  const [openModalEditForm, setOpenModalEditForm] = useState(false);
+
+  function openModalFormEditRecipe() {
+    setOpenModalEditForm(true);
+  }
+  function closeFormEditRecipe() {
+    setOpenModalEditForm(false);
+  }
 
   return (
     <div>
-      <div className="flex flex-row pt-24 items-center max-w-screen-lg m-auto hover:text-orange-600">
-        <IoMdArrowBack
-          className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
-          onClick={() => router.push("/")}
-        />
-        <span
-          style={{
-            cursor: "pointer",
-            paddingLeft: "0.5em",
-            color: "#f97316",
-            hover: "#ea580c",
-          }}
-          onClick={() => router.push("/")}
-        >
-          Voltar
-        </span>
+      <div className="flex flex-row justify-between pt-24 items-center max-w-screen-lg m-auto hover:text-orange-600">
+        <div className="flex flex-row">
+          <IoMdArrowBack
+            className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
+            onClick={() => router.push("/")}
+          />
+          <span
+            style={{
+              cursor: "pointer",
+              paddingLeft: "0.5em",
+              color: "#f97316",
+              hover: "#ea580c",
+            }}
+            onClick={() => router.push("/")}
+          >
+            Voltar
+          </span>
+        </div>
+        <div className="flex flex-row gap-1">
+          <span
+            style={{
+              cursor: "pointer",
+              paddingLeft: "0.5em",
+              color: "#f97316",
+              hover: "#ea580c",
+            }}
+            onClick={openModalFormEditRecipe}
+          >
+            Editar receita
+          </span>
+          <BiEditAlt
+            className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
+            onClick={openModalFormEditRecipe}
+          />
+        </div>
       </div>
 
       <div className="flex flex-col items-center p-3 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
-        {/* RECEITA: {JSON.stringify(pageRecipe)} {params.slug} <br /> */}
         <h1 className="my-3 font-semibold text-3xl text-orange-500">
           {pageRecipe.name}
         </h1>
+        <h1 className="mb-3 text-base text-orange-500">
+          {pageRecipe.category}
+        </h1>
+
         <div
           className="bg-center bg-cover mx-10 w-5/12 h-80"
           style={{
@@ -86,6 +117,9 @@ export default function Page({ params }) {
         `}
         </style>
       </div>
+      {openModalEditForm && (
+        <Form recipe={pageRecipe} closeModalFormRecipe={closeFormEditRecipe} />
+      )}
     </div>
   );
 }

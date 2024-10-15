@@ -93,6 +93,7 @@ export default function Header() {
                           <li
                             key={category.title}
                             className="cursor-pointer hover:text-orange-600 mb-2  border-b-2 divide-indigo-500"
+                            onClick={() => handleFilterRecipePage(category)}
                           >
                             {category.name}
                           </li>

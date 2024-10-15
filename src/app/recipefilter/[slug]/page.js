@@ -4,11 +4,14 @@ import { useContext } from "react";
 import { RecipeContext } from "@/app/recipeContext";
 import { CategoryContext } from "@/app/categoryContext";
 import { useRouter } from "next/navigation";
+import { SearchContext } from "../../searchContext";
 
 export default function Page({ params }) {
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
   const { categoryRecipes } = useContext(CategoryContext);
+  const { search, setSearch } = useContext(SearchContext);
+  const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
   const pageCategory = categoryRecipes.find(
     (category) => category.title === params.slug
@@ -20,6 +23,10 @@ export default function Page({ params }) {
     (recipe) => recipe.categoryValue === pageCategory.title
   );
   console.log({ recipes });
+
+  const searchRecipe = recipeFilterCategory.filter((recipe) =>
+    recipe.name.toLowerCase().includes(lowerSearch)
+  );
 
   function handleRecipePage(recipe) {
     router.push(`/recipe/${recipe.pageName}`);
@@ -34,7 +41,7 @@ export default function Page({ params }) {
       </div>
 
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        {recipeFilterCategory.map((recipe) => {
+        {searchRecipe.map((recipe) => {
           return (
             <button
               key={recipe.id}
