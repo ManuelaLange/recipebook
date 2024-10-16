@@ -9,7 +9,6 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 
 export default function Form({ closeModalFormRecipe, recipe }) {
-
   const { isEditable, setIsEditable } = useState(false);
   const { categoryRecipes } = useContext(CategoryContext);
   const { recipes, addRecipe, setRecipes } = useContext(RecipeContext);
@@ -24,9 +23,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
   const [addIngredients, setAddIngredients] = useState("");
   const [addInstrucitons, setAddInstructions] = useState("");
-  const [isHovered, setIsHovered] = useState(null); 
-
- 
+  const [isHovered, setIsHovered] = useState(null);
 
   useEffect(() => {
     if (recipe) {
@@ -56,30 +53,32 @@ export default function Form({ closeModalFormRecipe, recipe }) {
   }
 
   function addNewIngredient() {
-   if(isEditable){ 
-    if (!addIngredients.length) {
-      alert("Adicione um ingrediente");
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        ingredients: [...prevFormData.ingredients, addIngredients], // Adiciona o novo ingrediente ao array
-      }));
+    if (isEditable) {
+      if (!addIngredients.length) {
+        alert("Adicione um ingrediente");
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          ingredients: [...prevFormData.ingredients, addIngredients], // Adiciona o novo ingrediente ao array
+        }));
+      }
+      console.log(formData);
     }
-    console.log(formData);
-  }}
+  }
 
   function addNewInstructions() {
-    if(isEditable){
-    if (!addInstrucitons.length) {
-      alert("Adicione o modo de preparo");
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        instructions: [...prevFormData.instructions, addInstrucitons], // Adiciona o novo ingrediente ao array
-      }));
+    if (isEditable) {
+      if (!addInstrucitons.length) {
+        alert("Adicione o modo de preparo");
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          instructions: [...prevFormData.instructions, addInstrucitons], // Adiciona o novo ingrediente ao array
+        }));
+      }
+      console.log(formData);
     }
-    console.log(formData);
-  }}
+  }
 
   function handleKeyPressIngredients(e) {
     if (e.key === "Enter" && e.target === document.activeElement) {
@@ -94,31 +93,30 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     }
   }
 
+  function handleEditIngredient(index) {}
+  function handleEditInstruction(index) {}
 
-function handleEditIngredient(index){
+  function handleDeleteInstruction(index) {
+    const updatedInstruction = formData.instructions.filter(
+      (instruction, i) => i !== index
+    );
 
+    setFormData({
+      ...formData,
+      instructions: updatedInstruction,
+    });
+  }
 
-}
-function handleEditInstruction(index){
+  function handleDeleteIngredient(index) {
+    const updatedIngredients = formData.ingredients.filter(
+      (ingredient, i) => i !== index
+    );
 
-}
-
-function handleDeleteInstruction(index){
-
-}
-
-function handleDeleteIngredient( index){
-  const updatedIngredients = formData.ingredients.filter(
-    (ingredient, i) => i !== index );
- 
-
-  setFormData({
-    ...formData,
-    ingredients: updatedIngredients,
-  });
-}
-
-
+    setFormData({
+      ...formData,
+      ingredients: updatedIngredients,
+    });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -228,7 +226,6 @@ function handleDeleteIngredient( index){
 
             <div className="flex flex-row gap-1">
               <input
-    
                 name="ingredients"
                 type="text"
                 placeholder="Ingrediente"
@@ -244,18 +241,27 @@ function handleDeleteIngredient( index){
               {formData.ingredients.length > 0 &&
                 formData.ingredients.map((ingredient, index) => {
                   return (
-                    <div 
-                    onMouseEnter={() => setIsHovered(index)}
-                    onMouseLeave={() => setIsHovered(null)}
-                      className="flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300" key={index}>
-                    <p
-                      className="w-full"
-                      
+                    <div
+                      onMouseEnter={() => setIsHovered(index)}
+                      onMouseLeave={() => setIsHovered(null)}
+                      className="flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300"
+                      key={index}
                     >
-                      {ingredient}
-                    </p>
-                    {isHovered=== index  && <BiEditAlt onClick={handleEditIngredient} size={22} className="text-gray-500 cursor-pointer"/> } 
-                    {isHovered===index && <MdDeleteOutline onClick={() => handleDeleteIngredient(index)} size={22} className="text-red-500 cursor-pointer" />}
+                      <p className="w-full">{ingredient}</p>
+                      {isHovered === index && (
+                        <BiEditAlt
+                          onClick={handleEditIngredient}
+                          size={22}
+                          className="text-gray-500 cursor-pointer"
+                        />
+                      )}
+                      {isHovered === index && (
+                        <MdDeleteOutline
+                          onClick={() => handleDeleteIngredient(index)}
+                          size={22}
+                          className="text-red-500 cursor-pointer"
+                        />
+                      )}
                     </div>
                   );
                 })}
@@ -268,7 +274,6 @@ function handleDeleteIngredient( index){
             </label>
             <div className="flex flex-row gap-1">
               <input
-                
                 name="instructions"
                 type="text"
                 placeholder="Passo a passo da receita"
@@ -284,20 +289,32 @@ function handleDeleteIngredient( index){
               {formData.instructions.length > 0 &&
                 formData.instructions.map((instruction, index) => {
                   return (
-                    <div  onMouseEnter={() => setIsHovered(index)}
-                    onMouseLeave={() => setIsHovered(null)} className=" flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300" key={index}>
-                    <p className="w-full"
-                     
+                    <div
+                      onMouseEnter={() => setIsHovered(index)}
+                      onMouseLeave={() => setIsHovered(null)}
+                      className=" flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300"
+                      key={index}
                     >
-                      {instruction}
-                    </p>
-                    <div className="flex gap-2">
-        {isHovered=== index  && <BiEditAlt onClick={handleEditInstruction} size={22} className="text-gray-500 cursor-pointer"/> } 
-        {isHovered===index && <MdDeleteOutline onClick={handleDeleteInstruction} size={22} className="text-red-500 cursor-pointer" />}
-        
-      </div>
+                      <p className="w-full">{instruction}</p>
+                      <div className="flex gap-2">
+                        {isHovered === index && (
+                          <BiEditAlt
+                            onClick={handleEditInstruction}
+                            size={22}
+                            className="text-gray-500 cursor-pointer"
+                          />
+                        )}
+                        {isHovered === index && (
+                          <MdDeleteOutline
+                            onClick={() => {
+                              handleDeleteInstruction(index);
+                            }}
+                            size={22}
+                            className="text-red-500 cursor-pointer"
+                          />
+                        )}
+                      </div>
                     </div>
-
                   );
                 })}
             </div>
