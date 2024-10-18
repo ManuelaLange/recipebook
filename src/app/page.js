@@ -7,12 +7,18 @@ export default function Login (){
 
     const [isNewLogin, setIsNewLogin] = useState(false)
 
+    
 
+
+
+    function handleSubmit(){
+      
+    }
 
     function newAcount(){
         setIsNewLogin(true)
     }
-    function login(){
+    function LogOn(){
         setIsNewLogin(false)
     }
 
@@ -102,7 +108,7 @@ export default function Login (){
                         Cadastrar e entrar
                       </button>
                       <div className="text-center text-gray-600 mt-1">
-                        <a onClick={login}  className="text-orange-500 hover:underline cursor-pointer">Já tenho conta!</a>
+                        <a onClick={LogOn}  className="text-orange-500 hover:underline cursor-pointer">Já tenho conta!</a>
                     </div>
                     </form>
                   </div>)}
