@@ -33,10 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{ background: "rgb(250 250 250)" }}
       >
+        
         <SearchProvider>
           <RecipeProvider>
             <CategoryProvider>
-              <Header />
+             {/* <Header /> */}
               {children}
             </CategoryProvider>
           </RecipeProvider>

@@ -1,9 +1,9 @@
 "use client";
-import Form from "./components/Form";
+import Form from "../../components/Form";
 import { useState, useContext } from "react";
-import { RecipeContext } from "./recipeContext";
+import { RecipeContext } from "../../recipeContext";
 import { useRouter } from "next/navigation";
-import { SearchContext } from "./searchContext";
+import { SearchContext } from "../../searchContext";
 
 interface Recipe {
   id: string;
