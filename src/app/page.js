@@ -1,7 +1,7 @@
 "use client";
 
-// import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useContext } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -16,14 +16,16 @@ import {
   // addDoc,
 } from "firebase/firestore"; // Import everything you need from Firestore
 import "firebase/firestore";
+import { UserContext } from "./userContext";
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("manuela@gmail.com");
+  const [password, setPassword] = useState("manuela");
+  const { userSession, setUserSession } = useContext(UserContext);
+  const router = useRouter();
   // const [name, SetName] = useState("");
   // const [lastname, SetLastname] = useState("");
-
   const firebaseConfig = {
     apiKey: "AIzaSyBuXnsHIbbr-OPJr607kvi0JTI-1Uhb6BE",
     authDomain: "recipebook-cf446.firebaseapp.com",
@@ -35,37 +37,41 @@ export default function Login() {
   };
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
-  console.log({ db });
 
-  async function login(email, password) {
-    console.log("chamando o cadastro");
+  async function signInUser(e, email, password) {
+    e.preventDefault();
+    if (!email || !password) {
+      console.error("Todos os campos são obrigatórios.");
+      return; // Interrompe a função se houver algum campo vazio
+    }
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log(userCredential);
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
+      setUserSession(userCredential);
+      Storage.setItem("userSession", userCredential.user.accessToken);
 
-  async function signInUser(e, email, password) {
-    e.preventDefault();
-    try {
-      await login(email, password);
+      console.log("user", userCredential);
+      router.push(`/home/123`);
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function signUpUser(e, email, password, firstName, lastName) {
+  // Storage.get userSession
+
+  // if existir
+  //   firebaseConfig.validateSession(userSession)
+  // else
+  //   login
+
+  async function signUpUser(e, email, password) {
     console.log("dsadas");
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!email || !password) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
     }
@@ -78,10 +84,15 @@ export default function Login() {
         password
       );
 
+      console.log("certo", userCredential);
+      router.push(`/recipes/${userCredential.user.uid}`);
+
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
       console.log("Erro ao registrar usuário:", error);
     }
+    setEmail("");
+    setPassword("");
   }
 
   return (
@@ -95,7 +106,10 @@ export default function Login() {
           <p className="text-lg font-medium text-gray-700 mb-6">
             Faça seu login
           </p>
-          <form className="w-full flex flex-col gap-4" onSubmit={signInUser}>
+          <form
+            className="w-full flex flex-col gap-4"
+            onSubmit={(e) => signInUser(e, email, password)}
+          >
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 E-mail
@@ -132,7 +146,7 @@ export default function Login() {
             <div className="text-center text-gray-600 mt-4">
               <p>Não possui conta?</p>
               <a
-                onClick={() => setIsNewLogin(true)}
+                onClick={() => setIsNewLogin(true) && setEmail("")}
                 className="text-orange-500 hover:underline cursor-pointer"
               >
                 Cadastrar-se
@@ -147,7 +161,7 @@ export default function Login() {
           </p>
           <form
             className="w-full flex flex-col gap-4"
-            onSubmit={(e) => signUpUser(e, email, password, name, lastname)}
+            onSubmit={(e) => signUpUser(e, email, password)}
           >
             <div>
               <label className="block text-gray-700 font-semibold mb-2">

@@ -4,6 +4,7 @@ import { useState, useContext } from "react";
 import { RecipeContext } from "../../recipeContext";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../../searchContext";
+import { UserContext } from "../../userContext";
 
 interface Recipe {
   id: string;
@@ -12,11 +13,17 @@ interface Recipe {
   pageName: string;
 }
 
-export default function Home() {
+interface HomeProps {
+  uiduid: string;
+}
+
+export default function Home({ params }: HomeProps) {
+  const { uid } = params;
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
   const { recipes, addRecipe } = useContext(RecipeContext);
   const router = useRouter();
   const { search, setSearch } = useContext(SearchContext);
+  const { userSession } = useContext(UserContext);
 
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
@@ -40,6 +47,7 @@ export default function Home() {
     <div>
       <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <main className="mx-auto">Cadastre suas receitas</main>
+        <main className="mx-auto">Welcome, {userSession.user.email}</main>
         <button
           onClick={NewRecipe}
           className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400"
