@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -20,8 +20,8 @@ import { UserContext } from "./userContext";
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
-  const [email, setEmail] = useState("manuela@gmail.com");
-  const [password, setPassword] = useState("manuela");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { userSession, setUserSession } = useContext(UserContext);
   const router = useRouter();
   // const [name, SetName] = useState("");
@@ -38,6 +38,15 @@ export default function Login() {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("acessToken");
+    if (accessToken) {
+      router.push(`/home/123`);
+    } else {
+      router.push(`/`);
+    }
+  }, [router]);
+
   async function signInUser(e, email, password) {
     e.preventDefault();
     if (!email || !password) {
@@ -51,10 +60,12 @@ export default function Login() {
         password
       );
       setUserSession(userCredential);
-      Storage.setItem("userSession", userCredential.user.accessToken);
+      localStorage.setItem("accessToken", userCredential.user.accessToken);
 
       console.log("user", userCredential);
       router.push(`/home/123`);
+      setEmail("");
+      setPassword("");
     } catch (err) {
       console.log(err);
     }
