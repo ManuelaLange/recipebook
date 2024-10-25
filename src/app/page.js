@@ -2,21 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useContext, useEffect } from "react";
-import { initializeApp } from "firebase/app";
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import {
-  getFirestore,
-  // doc,
-  // setDoc,
-  // collection,
-  // addDoc,
-} from "firebase/firestore"; // Import everything you need from Firestore
+import {ref, set} from "firebase/database"
 import "firebase/firestore";
-import { UserContext } from "./userContext";
+import {auth, db,} from "./configFirebase"
+import { UserContext } from "./context";
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
@@ -24,19 +17,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const { userSession, setUserSession } = useContext(UserContext);
   const router = useRouter();
-  // const [name, SetName] = useState("");
-  // const [lastname, SetLastname] = useState("");
-  const firebaseConfig = {
-    apiKey: "AIzaSyBuXnsHIbbr-OPJr607kvi0JTI-1Uhb6BE",
-    authDomain: "recipebook-cf446.firebaseapp.com",
-    projectId: "recipebook-cf446",
-    storageBucket: "recipebook-cf446.appspot.com",
-    messagingSenderId: "850048654425",
-    appId: "1:850048654425:web:7b9fd8e9afaea69d836548",
-    measurementId: "G-W922TLKM3H",
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const [name, SetName] = useState("");
+const [lastname, SetLastname] = useState("");
 
   useEffect(() => {
     const accessToken = localStorage.getItem("acessToken");
@@ -78,14 +60,15 @@ export default function Login() {
   // else
   //   login
 
-  async function signUpUser(e, email, password) {
+  async function signUpUser(e, email, password, name, lastname) {
     console.log("dsadas");
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email || !password || !name || !lastname) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
     }
+
 
     try {
       // Cria um novo usuário com email e senha
@@ -94,9 +77,21 @@ export default function Login() {
         email,
         password
       );
+      console.log('novo Usuário',userCredential)
+      
+      set (ref(db,'/users'),{
+        username:{name},
+        email:email,
+        password:{password}
+      })
+      console.log("certo", set (ref(db,'/users'),{
+        username:{name},
+        email:email,
+        password:{password}
+      }));
 
-      console.log("certo", userCredential);
-      router.push(`/recipes/${userCredential.user.uid}`);
+      
+      router.push(`/home/123`);
 
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
@@ -172,7 +167,7 @@ export default function Login() {
           </p>
           <form
             className="w-full flex flex-col gap-4"
-            onSubmit={(e) => signUpUser(e, email, password)}
+            onSubmit={(e) => signUpUser(e, email, password, name, lastname)}
           >
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -186,6 +181,32 @@ export default function Login() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
               />
             </div>
+            
+              <div>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Nome
+            </label>
+            <input
+              type="Name"
+              value={name}
+              onChange={(e) => SetName(e.target.value)}
+              placeholder="Digite seu nome"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
+            />
+            </div>
+            <div>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Sobrenome
+            </label>
+            <input
+              type="Lastname"
+              value={lastname}
+              onChange={(e) => SetLastname(e.target.value)}
+              placeholder="Digite seu sobrenome"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
+            />
+            </div>
+
 
             <div>
               <label className="block text-gray-700 font-semibold mb-2">

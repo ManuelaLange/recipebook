@@ -6,7 +6,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { FaBook } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
 import { RecipeContext } from "../recipeContext";
-import { SearchContext } from "../searchContext";
+import { SearchContext } from "../context";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);

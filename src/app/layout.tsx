@@ -4,8 +4,8 @@ import "./globals.css";
 import Header from "./components/Header";
 import { CategoryProvider } from "./categoryContext";
 import { RecipeProvider } from "./recipeContext";
-import { SearchProvider } from "./searchContext";
-import { UserProvider } from "./userContext";
+import { SearchProvider } from "./context";
+import { UserProvider } from "./context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

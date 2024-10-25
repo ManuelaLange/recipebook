@@ -3,8 +3,8 @@ import Form from "../../components/Form";
 import { useState, useContext } from "react";
 import { RecipeContext } from "../../recipeContext";
 import { useRouter } from "next/navigation";
-import { SearchContext } from "../../searchContext";
-import { UserContext } from "../../userContext";
+import { SearchContext } from "../../context";
+import { UserContext } from "../../context";
 
 interface Recipe {
   id: string;
@@ -47,7 +47,7 @@ export default function Home({ params }: HomeProps) {
     <div>
       <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <main className="mx-auto">Cadastre suas receitas</main>
-        <main className="mx-auto">Welcome, {userSession.user.email}</main>
+        <main className="mx-auto">Welcome, </main>
         <button
           onClick={NewRecipe}
           className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400"
