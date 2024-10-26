@@ -35,14 +35,16 @@ export default function RootLayout({
         style={{ background: "rgb(250 250 250)" }}
       >
         <SearchProvider>
-          <RecipeProvider>
-            <CategoryProvider>
-              <UserProvider>
-                {/* <Header /> */}
-                {children}
-              </UserProvider>
-            </CategoryProvider>
-          </RecipeProvider>
+          <UserProvider>
+            <RecipeProvider>
+              <CategoryProvider>
+                <UserProvider>
+                  {/* <Header /> */}
+                  {children}
+                </UserProvider>
+              </CategoryProvider>
+            </RecipeProvider>
+          </UserProvider>
         </SearchProvider>
       </body>
     </html>

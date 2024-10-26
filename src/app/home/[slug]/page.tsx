@@ -7,18 +7,17 @@ import { SearchContext } from "../../context";
 import { UserContext } from "../../context";
 
 interface Recipe {
-  id: string;
+  uid: string;
   name: string;
   img: string;
   pageName: string;
 }
 
 interface HomeProps {
-  uiduid: string;
+  uid: string;
 }
 
-export default function Home({ params }: HomeProps) {
-  const { uid } = params;
+export default function Home({ uid }: HomeProps) {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
   const { recipes, addRecipe } = useContext(RecipeContext);
   const router = useRouter();
@@ -39,7 +38,7 @@ export default function Home({ params }: HomeProps) {
     SetModalNewRecipe(false);
   }
 
-  function handleRecipePage(recipe: { id: string; pageName: string }) {
+  function handleRecipePage(recipe: { uid: string; pageName: string }) {
     router.push(`/recipe/${recipe.pageName}`);
   }
 
@@ -47,7 +46,7 @@ export default function Home({ params }: HomeProps) {
     <div>
       <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <main className="mx-auto">Cadastre suas receitas</main>
-        <main className="mx-auto">Welcome, </main>
+        <main className="mx-auto">Welcome</main>
         <button
           onClick={NewRecipe}
           className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400"
@@ -56,13 +55,13 @@ export default function Home({ params }: HomeProps) {
         </button>
       </div>
       <div className="flex flex-grow max-w-screen-lg justify-between m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
-        <h4 className=" ">Adicionadas recentemente</h4>
+        <h4 className=" ">Sugestões de receitas</h4>
         <a className=" text-orange-500 underline block text-right cursor-pointer hover:text-orange-600">
           Acessar todas
         </a>
       </div>
 
-      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+      {/* <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
         {searchRecipe.map((recipe: Recipe) => {
           return (
             <button
@@ -77,9 +76,33 @@ export default function Home({ params }: HomeProps) {
             </button>
           );
         })}
+      </div> */}
+      <div className="flex flex-grow max-w-screen-lg justify-between m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
+        <h4 className=" ">Minhas receitas</h4>
+        <a className=" text-orange-500 underline block text-right cursor-pointer hover:text-orange-600">
+          Acessar todas
+        </a>
+      </div>
+      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+        {searchRecipe.map((recipe: Recipe) => {
+          return (
+            <button
+              key={recipe.uid}
+              onClick={() =>
+                handleRecipePage({ uid: recipe.id, pageName: recipe.pageName })
+              }
+              className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
+            >
+              <img className="w-36 h-28 rounded-lg w-" src={recipe.img}></img>
+              <p>{recipe.name}</p>
+            </button>
+          );
+        })}
       </div>
 
-      {modalNewRecipe && <Form closeModalFormRecipe={CloseModalRecipe} />}
+      {modalNewRecipe && (
+        <Form recipe={null} closeModalFormRecipe={CloseModalRecipe} />
+      )}
     </div>
   );
 }

@@ -1,11 +1,7 @@
 "use client";
 
-
 import { createContext, useState, useEffect } from "react";
-import { auth, db } from "./configFirebase"; 
-import { doc,collection, getDoc } from "firebase/database"
-
-
+import { auth } from "./configFirebase";
 
 // Context para barra de pesquisa
 const SearchContext = createContext();
@@ -20,38 +16,27 @@ const SearchProvider = ({ children }) => {
 };
 export { SearchProvider, SearchContext };
 
-
 // Context para o userSession
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [userSession, setUserSession] = useState({});
-
-useEffect (() => {
-  const unsubscribe = auth.onAuthStateChanged(async (user)=> {
-    if (user){
-      const uid=user.uid
-      const userDocRef = doc(db,"users", uid)
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          setUserSession({
-            uid: user.uid,
-            ...userDoc.data(),
-          });
-        } else {
-          console.error("Documento do usuário não encontrado");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
+  useEffect(() => {
+    // Observar mudanças no status de autenticação
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Usuário logado, armazenar o uid
+        setUserSession(auth.currentUser.uid);
+        console.log(auth.currentUser.uid);
+      } else {
+        // Usuário deslogado, limpar o estado
+        setUserSession(null);
       }
-    } else {
-      setUserSession(null); 
-    }
-  });
-  return () => unsubscribe();
-}, []);
+    });
 
+    // Limpar o observador ao desmontar o componente
+    return () => unsubscribe();
+  }, []);
 
   return (
     <UserContext.Provider value={{ userSession, setUserSession }}>
@@ -59,9 +44,10 @@ useEffect (() => {
     </UserContext.Provider>
   );
 };
-export { UserProvider, UserContext }
+export { UserProvider, UserContext };
 
-//fazer as novas receitas cadastradas no form enviarem para o localstorage
+//fazer as novas receitas cadastradas no form enviarem para o banco de dados
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// fazer formulario de "como podemos te chamar" após o cadastro e criar regra no firebase.
 // arrumar o header para aparecer só na pagina de login
+// apagar conteúdo ap´´os a pessoa dar enter no ingrediente e na instrução
+// colocar um if se a pessoa não tiver receita.

@@ -6,9 +6,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import {ref, set} from "firebase/database"
-import "firebase/firestore";
-import {auth, db,} from "./configFirebase"
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
 
 export default function Login() {
@@ -17,11 +16,11 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const { userSession, setUserSession } = useContext(UserContext);
   const router = useRouter();
-const [name, SetName] = useState("");
-const [lastname, SetLastname] = useState("");
+  const [name, SetName] = useState("");
+  const [lastname, SetLastname] = useState("");
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("acessToken");
+    const accessToken = localStorage.getItem("uid");
     if (accessToken) {
       router.push(`/home/123`);
     } else {
@@ -42,7 +41,7 @@ const [lastname, SetLastname] = useState("");
         password
       );
       setUserSession(userCredential);
-      localStorage.setItem("accessToken", userCredential.user.accessToken);
+      localStorage.setItem("uid", userCredential.user.uid);
 
       console.log("user", userCredential);
       router.push(`/home/123`);
@@ -60,15 +59,14 @@ const [lastname, SetLastname] = useState("");
   // else
   //   login
 
-  async function signUpUser(e, email, password, name, lastname) {
+  async function signUpUser(e, email, password) {
     console.log("dsadas");
     e.preventDefault();
 
-    if (!email || !password || !name || !lastname) {
+    if (!email || !password || !lastname || !name) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
     }
-
 
     try {
       // Cria um novo usuário com email e senha
@@ -77,26 +75,27 @@ const [lastname, SetLastname] = useState("");
         email,
         password
       );
-      console.log('novo Usuário',userCredential)
-      
-      set (ref(db,'/users'),{
-        username:{name},
-        email:email,
-        password:{password}
-      })
-      console.log("certo", set (ref(db,'/users'),{
-        username:{name},
-        email:email,
-        password:{password}
-      }));
+      console.log("novo Usuário", userCredential);
 
-      
+      try {
+        addDoc(collection(db, "/users", userCredential.user.uid), {
+          id: userCredential.user.uid,
+          username: name,
+          email: email,
+          password: password,
+        });
+        console.log("Document written with ID: ", db.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      localStorage.setItem("uid", userCredential.user.uid);
       router.push(`/home/123`);
 
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
       console.log("Erro ao registrar usuário:", error);
     }
+
     setEmail("");
     setPassword("");
   }
@@ -171,6 +170,30 @@ const [lastname, SetLastname] = useState("");
           >
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
+                Nome
+              </label>
+              <input
+                type="Name"
+                value={name}
+                onChange={(e) => SetName(e.target.value)}
+                placeholder="Digite seu nome"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Sobrenome
+              </label>
+              <input
+                type="Lastname"
+                value={lastname}
+                onChange={(e) => SetLastname(e.target.value)}
+                placeholder="Digite seu sobrenome"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
                 E-mail
               </label>
               <input
@@ -181,33 +204,6 @@ const [lastname, SetLastname] = useState("");
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
               />
             </div>
-            
-              <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Nome
-            </label>
-            <input
-              type="Name"
-              value={name}
-              onChange={(e) => SetName(e.target.value)}
-              placeholder="Digite seu nome"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
-            />
-            </div>
-            <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Sobrenome
-            </label>
-            <input
-              type="Lastname"
-              value={lastname}
-              onChange={(e) => SetLastname(e.target.value)}
-              placeholder="Digite seu sobrenome"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
-            />
-            </div>
-
-
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Digite sua senha
@@ -220,7 +216,6 @@ const [lastname, SetLastname] = useState("");
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
               />
             </div>
-
             <button
               type="submit"
               className="w-full bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition duration-300"

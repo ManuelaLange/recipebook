@@ -1,37 +1,29 @@
 // "use client";
 
 // import { createContext, useState, useEffect } from "react";
-// import { auth, db } from "./firebaseConfig"; // Certifique-se de importar a configuração correta do Firebase
-// import { doc, getDoc } from "firebase/firestore";
+// import { auth } from "./configFirebase"; // Certifique-se de importar a configuração correta do Firebase
 
 // const UserContext = createContext();
 
 // const UserProvider = ({ children }) => {
-//   const [userSession, setUserSession] = useState({});
+//   const [userSession, setUserSession] = useState(null);
 
-// useEffect (() => {
-//   const unsubscribe = auth.onAuthStateChanged(async (user)=> {
-//     if (user){
-//       const uid=user.uid
-//       const userDocRef = doc(db,"users", uid)
-//       const userDoc = await getDoc(userDocRef)
-//       if(userDoc.exists()){
-//         setUserSession({
-//           uid:user.uid,...userDoc.data(),
-//         })
+//   useEffect(() => {
+//     // Observar mudanças no status de autenticação
+//     const unsubscribe = auth.onAuthStateChanged(async (user) => {
+//       if (user) {
+//         // Usuário logado, armazenar o uid
+//         setUserSession(auth.userCredencial.user.uid);
+//         console.log(auth.userCredencial.user.uid);
+//       } else {
+//         // Usuário deslogado, limpar o estado
+//         setUserSession(null);
 //       }
-//       else{
-//         console.error("Documento do usuário não encontrado")
-//       }
-//     }
-//    else
-//    { setUserSession(null)}
-    
-  
-// })
-// return()=> unsubscribe
-// }, [])
+//     });
 
+//     // Limpar o observador ao desmontar o componente
+//     return () => unsubscribe();
+//   }, []);
 
 //   return (
 //     <UserContext.Provider value={{ userSession, setUserSession }}>
@@ -39,4 +31,4 @@
 //     </UserContext.Provider>
 //   );
 // };
-// export { UserProvider, UserContext }
+// export { UserProvider, UserContext };
