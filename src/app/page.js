@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, setDoc, doc } from "firebase/firestore";
 import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
 
@@ -75,16 +75,15 @@ export default function Login() {
         email,
         password
       );
-      console.log("novo Usuário", userCredential);
+      const uid = userCredential.user.uid
 
       try {
-        addDoc(collection(db, "/users", userCredential.user.uid), {
-          id: userCredential.user.uid,
+        setDoc(doc(db, "users", uid), {
           username: name,
           email: email,
           password: password,
         });
-        console.log("Document written with ID: ", db.id);
+        console.log("Document written with ID: ", uid);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -235,31 +234,4 @@ export default function Login() {
       )}
     </div>
   );
-}
-
-{
-  /* <div>
-<label className="block text-gray-700 font-semibold mb-2">
-  Nome
-</label>
-<input
-  type="Name"
-  value={name}
-  onChange={(e) => SetName(e.target.value)}
-  placeholder="Digite seu nome"
-  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
-/>
-</div>
-<div>
-<label className="block text-gray-700 font-semibold mb-2">
-  Sobrenome
-</label>
-<input
-  type="Lastname"
-  value={lastname}
-  onChange={(e) => SetLastname(e.target.value)}
-  placeholder="Digite seu sobrenome"
-  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:outline-none"
-/>
-</div> */
 }

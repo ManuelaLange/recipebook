@@ -185,7 +185,7 @@ const RecipeProvider = ({ children }) => {
     const categoryValue = category.toLowerCase().replace(/\s+/g, "-"); // transforma a categoria em lowercase para fins de consistência
     console.log("uid", uid);
     try {
-      const docRef = await addDoc(collection(db, "users", uid, "recipes"), {
+      const docRef = await addDoc(collection(db, "users", userSession, "recipes"), {
         category,
         categoryValue,
         ingredients,
@@ -195,7 +195,7 @@ const RecipeProvider = ({ children }) => {
         pageName,
         time,
       });
-      console.log("Document written with ID: ", docRef.uid);
+      console.log("Document written with ID: ", docRef);
 
       const newRecipe = {
         uid,

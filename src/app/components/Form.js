@@ -9,16 +9,19 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
 
+
 export default function Form({ closeModalFormRecipe, recipe }) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
   const { recipes, addRecipe, setRecipes } = useContext(RecipeContext);
+ 
   const [formData, setFormData] = useState({
     name: "",
     category: "",
     time: "",
     ingredients: [],
     instructions: [],
+
   });
   const [editingRecipeId, setEditingRecipeId] = useState(null); // caso a pessoa esteja editando uma receita, é por esse id que saberá qual receita mostrar no formulario
 

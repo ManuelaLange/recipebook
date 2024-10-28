@@ -20,17 +20,17 @@ export { SearchProvider, SearchContext };
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [userSession, setUserSession] = useState({});
+  const [userSession, setUserSession] = useState("");
   useEffect(() => {
     // Observar mudanças no status de autenticação
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         // Usuário logado, armazenar o uid
-        setUserSession(auth.currentUser.uid);
-        console.log(auth.currentUser.uid);
+        setUserSession(user.uid);
+        console.log(user.uid);
       } else {
         // Usuário deslogado, limpar o estado
-        setUserSession(null);
+        setUserSession("");
       }
     });
 
@@ -51,3 +51,5 @@ export { UserProvider, UserContext };
 // arrumar o header para aparecer só na pagina de login
 // apagar conteúdo ap´´os a pessoa dar enter no ingrediente e na instrução
 // colocar um if se a pessoa não tiver receita.
+// demora pra entrar
+// receitas não estão aparecendo na pagina inicial. 
