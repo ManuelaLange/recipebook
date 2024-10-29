@@ -21,15 +21,18 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     time: "",
     ingredients: [],
     instructions: [],
+    img:"",
 
   });
   const [editingRecipeId, setEditingRecipeId] = useState(null); // caso a pessoa esteja editando uma receita, é por esse id que saberá qual receita mostrar no formulario
 
   const [addIngredients, setAddIngredients] = useState(""); // serve para salvar o que está sendo digitado no input do ingredient para adicionar um novo ingrediente
   const [addInstrucitons, setAddInstructions] = useState(""); // serve para salvar o que está sendo digitado no input do instruction para adicionar um novo modo de prepardo
-  const [isHovered, setIsHovered] = useState(null); //serve para ativar ou desativar os icones de edição e excluir
-  const [isEditingValue, setisEditingValue] = useState(""); // serve para salvar o valor do ingredient/instruction que foi clicado
-  const [isEditingIndex, setisEditingIndex] = useState(null); // serve para salvar o index do ingredient/instruction que foi clicado
+  const [isHoveredIngredient, setIsHoveredIngredient] = useState(null); //serve para ativar ou desativar os icones de edição e excluir
+  const [isHoveredInstructions, setIsHoveredInstructions] = useState(null); //serve para ativar ou desativar os icones de edição e excluir
+  const [isEditingValue, setIsEditingValue] = useState(""); // serve para salvar o valor do ingredient/instruction que foi clicado
+  const [isEditingIndexIngredients, setIsEditingIndexIngredients] = useState(null); // serve para salvar o index do ingredient que foi clicado
+  const [isEditingIndexInstructions, setIsEditingIndexInstructions] = useState(null); // serve para salvar o index do instruction que foi clicado
 
   useEffect(() => {
     if (recipe) {
@@ -40,6 +43,8 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       setIsEditable(true); // Quando não há receita, estamos criando uma nova.
     }
   }, [recipe]);
+
+
   function handleInputChange(e) {
     const { name, value } = e.target;
     setFormData({
@@ -48,7 +53,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     });
   }
 
-  function handleInputIngredients(e) {
+  function handleInputIngredients(e) { 
     e.preventDefault();
     const value = e.target.value;
     setAddIngredients(value);
@@ -60,27 +65,36 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     setAddInstructions(value);
   }
 
+
+// A função abaixo é chamada para confimar o envio do input
   function addNewIngredient() {
     if (isEditable && !addIngredients.length) {
       alert("Adicione um ingrediente");
+      return
+    
     }
     setFormData((prevFormData) => ({
       ...prevFormData,
-      ingredients: [addIngredients, ...prevFormData.ingredients], // Adiciona o novo ingrediente ao array
+      ingredients: [...prevFormData.ingredients, addIngredients], // Adiciona o novo ingrediente ao array
     }));
-
+    setAddIngredients('');
     console.log(formData);
   }
 
+// A função abaixo é chamada para confimar o envio do input
   function addNewInstructions() {
     if (isEditable && !addInstrucitons.length) {
       // addInstrucitons.length retorna o numero de de elementos se ele estiver vazio ele retorno, 0/false, o operador ! inverte o valor e retorna true.
       alert("Adicione o modo de preparo");
+      return
     }
     setFormData((prevFormData) => ({
       ...prevFormData,
-      instructions: [addInstrucitons, ...prevFormData.instructions], // Adiciona o novo ingrediente ao array
-    }));
+      instructions: [ ...prevFormData.instructions, addInstrucitons], // Adiciona o novo ingrediente ao array
+
+    }))
+  setAddInstructions('')
+  console.log(formData);
   }
 
   function handleKeyPressIngredients(e) {
@@ -89,16 +103,23 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       e.preventDefault();
     }
   }
+
   function handleKeyPressInstrucitons(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target === document.activeElement) {
       addNewInstructions();
       e.preventDefault();
+      
     }
   }
 
-  function handleEdit(index, ingredient) {
-    setisEditingValue(ingredient);
-    setisEditingIndex(index);
+  function handleEditIngredient(index, ingredient) {
+    setIsEditingValue(ingredient);
+    setIsEditingIndexIngredients(index);
+  }
+
+  function handleEditInstruction(index, instructions) {
+    setIsEditingValue(instructions);
+    setIsEditingIndexInstructions(index);
   }
 
   function confirmEditValueIngredient(index) {
@@ -108,8 +129,8 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       ...formData,
       ingredients: updatedIngredient,
     });
-    setisEditingValue("");
-    setisEditingIndex(null);
+    setIsEditingValue("");
+    setIsEditingIndexIngredients(null);
   }
 
   function confirmEditValueInstruction(index) {
@@ -119,12 +140,13 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       ...formData,
       instructions: updatedInstruction,
     });
-    setisEditingValue("");
-    setisEditingIndex(null);
+    setIsEditingValue("");
+    setIsEditingIndexInstructions(null);
   }
 
   function cancelEdit() {
-    setisEditingIndex(null);
+    setIsEditingIndexInstructions(null);
+    setIsEditingIndexIngredients(null)
   }
 
   function handleDeleteInstruction(index) {
@@ -162,7 +184,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       ingredients: [""],
       instructions: [""],
     });
+    closeModalFormRecipe()
   }
+
+
   function handleEditRecipe() {
     const updatedRecipes = recipes.map((rec) =>
       rec.id === editingRecipeId ? { ...rec, ...formData } : rec
@@ -263,6 +288,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                 className=" w-full px-3 py-2 border mb-1 border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                 onChange={handleInputIngredients}
                 onKeyUp={handleKeyPressIngredients}
+                value={addIngredients}
               />
               <button type="button" onClick={addNewIngredient}>
                 <CiCirclePlus size={30} />
@@ -273,17 +299,17 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                 formData.ingredients.map((ingredient, index) => {
                   return (
                     <div
-                      onMouseEnter={() => setIsHovered(index)}
-                      onMouseLeave={() => setIsHovered(null)}
+                      onMouseEnter={() => setIsHoveredIngredient(index)}
+                      onMouseLeave={() => setIsHoveredIngredient(null)}
                       className="flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300"
                       key={index}
                     >
-                      {isEditingIndex === index ? (
+                      {isEditingIndexIngredients === index ? (
                         <div className="flex justify-between w-full">
                           <input
                             type="text"
                             value={isEditingValue}
-                            onChange={(e) => setisEditingValue(e.target.value)}
+                            onChange={(e) => setIsEditingValue(e.target.value)}
                             className="w-full px-2 py-1 border border-gray-300 rounded-md"
                           />
                           <div className="flex items-center gap-1 ml-1">
@@ -302,10 +328,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                       ) : (
                         <div className="flex justify-between w-full">
                           <p className="w-full">{ingredient}</p>
-                          {isHovered === index && (
+                          {isHoveredIngredient === index && (
                             <div className="flex items-center gap-2">
                               <BiEditAlt
-                                onClick={() => handleEdit(index, ingredient)}
+                                onClick={() => handleEditIngredient(index, ingredient)}
                                 size={22}
                                 className="text-gray-500 cursor-pointer"
                               />
@@ -336,6 +362,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                 className="w-full px-3 py-2 border mb-1 border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
                 onChange={handleInputInstructions}
                 onKeyUp={handleKeyPressInstrucitons}
+                value={addInstrucitons}
               />
               <button type="button" onClick={addNewInstructions}>
                 <CiCirclePlus size={30} />
@@ -346,17 +373,17 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                 formData.instructions.map((instruction, index) => {
                   return (
                     <div
-                      onMouseEnter={() => setIsHovered(index)}
-                      onMouseLeave={() => setIsHovered(null)}
+                      onMouseEnter={() => setIsHoveredInstructions(index)}
+                      onMouseLeave={() => setIsHoveredInstructions(null)}
                       className=" flex flex-row items-center justify-between gap-2 w-full px-3 py-2 border rounded-md border-gray-300"
                       key={index}
                     >
-                      {isEditingIndex === index ? (
+                      {isEditingIndexInstructions === index ? (
                         <div className="flex justify-between w-full">
                           <input
                             type="text"
                             value={isEditingValue}
-                            onChange={(e) => setisEditingValue(e.target.value)}
+                            onChange={(e) => setIsEditingValue(e.target.value)}
                             className="w-full px-2 py-1 border border-gray-300 rounded-md"
                           />
                           <div className="flex items-center gap-1 ml-1">
@@ -375,10 +402,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
                       ) : (
                         <div className="flex justify-between w-full">
                           <p className="w-full">{instruction}</p>
-                          {isHovered === index && (
+                          {isHoveredInstructions === index && (
                             <div className="flex items-center gap-2">
                               <BiEditAlt
-                                onClick={() => handleEdit(index, instruction)}
+                                onClick={() => handleEditInstruction(index, instruction)}
                                 size={22}
                                 className="text-gray-500 cursor-pointer"
                               />
@@ -400,10 +427,17 @@ export default function Form({ closeModalFormRecipe, recipe }) {
           </div>
 
           <div className="w-full mb-2 flex flex-col">
-            <label className="text-gray-700 font-bold" htmlFor="imageInput">
+            <label className="text-gray-700 font-bold">
               Anexar Imagem:
             </label>
-            <input type="file" id="imageInput" accept="image/*"></input>
+            <input
+              name="img"
+              type="text"
+              placeholder="Adicione a URL de uma imagem"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
+              value={formData.img}
+              onChange={handleInputChange}
+            />
           </div>
 
           <button

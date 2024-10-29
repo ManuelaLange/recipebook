@@ -13,15 +13,11 @@ interface Recipe {
   pageName: string;
 }
 
-interface HomeProps {
-  uid: string;
-}
-
-export default function Home({ uid }: HomeProps) {
+export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
-  const { recipes, addRecipe } = useContext(RecipeContext);
+  const { recipes } = useContext(RecipeContext);
   const router = useRouter();
-  const { search, setSearch } = useContext(SearchContext);
+  const { search } = useContext(SearchContext);
   const { userSession } = useContext(UserContext);
 
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
@@ -29,6 +25,7 @@ export default function Home({ uid }: HomeProps) {
   const searchRecipe = recipes.filter((recipe: { name: string }) =>
     recipe.name.toLowerCase().includes(lowerSearch)
   );
+
 
   function NewRecipe() {
     SetModalNewRecipe(true);
@@ -78,18 +75,24 @@ export default function Home({ uid }: HomeProps) {
         })}
       </div> */}
       <div className="flex flex-grow max-w-screen-lg justify-between m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
-        <h4 className=" ">Minhas receitas</h4>
+        <h4 >Minhas receitas</h4>
+        
         <a className=" text-orange-500 underline block text-right cursor-pointer hover:text-orange-600">
           Acessar todas
         </a>
       </div>
+        {/* {!userSession ?  */}
+        <div  className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
+          <h4 className=" ">Você ainda não possui receita cadastrada.</h4>
+
+        </div>
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
         {searchRecipe.map((recipe: Recipe) => {
           return (
             <button
               key={recipe.uid}
               onClick={() =>
-                handleRecipePage({ uid: recipe.id, pageName: recipe.pageName })
+                handleRecipePage({ uid: recipe.uid, pageName: recipe.pageName })
               }
               className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
             >

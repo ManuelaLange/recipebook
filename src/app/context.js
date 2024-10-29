@@ -46,10 +46,11 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-//fazer as novas receitas cadastradas no form enviarem para o banco de dados
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
 // arrumar o header para aparecer só na pagina de login
-// apagar conteúdo ap´´os a pessoa dar enter no ingrediente e na instrução
 // colocar um if se a pessoa não tiver receita.
 // demora pra entrar
-// receitas não estão aparecendo na pagina inicial. 
+// logar com o google 
+// colocar mensagens de sucesso ao longo do site
+// colocar campo de loading na entrada.
+// fazer pagina de cateogrias.

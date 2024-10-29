@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "./configFirebase";
 import { UserContext } from "./context";
@@ -162,16 +162,28 @@ const RecipeProvider = ({ children }) => {
   // ]);
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
-
+  const uid = userSession;
+  
   const fetchUserRecipes = async () => {
-    const uid = userSession;
-    const recipesQuery = getDocs(collection(db, "users", uid, "recipes"));
-    const querySnapshot = await getDocs(recipesQuery);
+   try{ 
+    const recipesCollectionRef  = collection(db, "users", uid, "recipes");
+    const querySnapshot = await getDocs(recipesCollectionRef);
     const userRecipes = querySnapshot.docs.map((doc) => doc.data());
-    console.log(fetchUserRecipes);
     setRecipes(userRecipes);
-    console.log("id1", uid);
+    console.log(userRecipes)
+  }catch(e){
+    console.error("Erro ao buscar as receitas ", e)
+  }
   };
+  console.log('receitas', recipes)
+  
+  useEffect(()=> 
+ { if(userSession)
+ {
+  fetchUserRecipes()
+ }return
+  
+ }, [userSession])
 
   async function addRecipe({
     name,
@@ -179,6 +191,7 @@ const RecipeProvider = ({ children }) => {
     time,
     ingredients,
     instructions,
+    img
   }) {
     const uid = userSession;
     const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
@@ -194,6 +207,7 @@ const RecipeProvider = ({ children }) => {
         name,
         pageName,
         time,
+        img
       });
       console.log("Document written with ID: ", docRef);
 
@@ -206,6 +220,7 @@ const RecipeProvider = ({ children }) => {
         time,
         ingredients,
         instructions,
+        img,
       };
       setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
     } catch (e) {
