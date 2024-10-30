@@ -7,6 +7,7 @@ import { FaBook } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
 import { RecipeContext } from "../recipeContext";
 import { SearchContext } from "../context";
+import { UserProvider, UserContext } from "../context";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
@@ -15,9 +16,10 @@ export default function Header() {
   const { categoryRecipes } = useContext(CategoryContext);
   const { recipes } = useContext(RecipeContext);
   const { search, setSearch } = useContext(SearchContext);
+  const {userSession} = useContext(UserContext) 
 
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
-
+  
   const searchRecipe = recipes.filter((recipe) =>
     recipe.name.toLowerCase().includes(lowerSearch)
   );

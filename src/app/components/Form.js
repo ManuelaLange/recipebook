@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function Form({ closeModalFormRecipe, recipe }) {
@@ -16,6 +17,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
   const { recipes, addRecipe, setRecipes } = useContext(RecipeContext);
  
   const [formData, setFormData] = useState({
+    id:uuidv4(),
     name: "",
     category: "",
     time: "",
@@ -178,6 +180,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     console.log("nova receita:", formData);
 
     setFormData({
+      id:"",
       name: "",
       category: "",
       time: "",
@@ -189,10 +192,8 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
 
   function handleEditRecipe() {
-    const updatedRecipes = recipes.map((rec) =>
-      rec.id === editingRecipeId ? { ...rec, ...formData } : rec
-    );
-    setRecipes(updatedRecipes); // Atualiza o estado com a lista de receitas editada
+  
+    editedRecipes(formData); // Atualiza o estado com a lista de receitas editada
     setEditingRecipeId(null);
     closeModalFormRecipe();
 
