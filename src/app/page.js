@@ -22,7 +22,7 @@ export default function Login() {
   useEffect(() => {
     const accessToken = localStorage.getItem("uid");
     if (accessToken) {
-      router.push(`/home/123`);
+      router.push(`/home`);
     } else {
       router.push(`/`);
     }
@@ -44,7 +44,7 @@ export default function Login() {
       localStorage.setItem("uid", userCredential.user.uid);
 
       console.log("user", userCredential);
-      router.push(`/home/123`);
+      router.push(`/home`);
       setEmail("");
       setPassword("");
     } catch (err) {
@@ -88,7 +88,7 @@ export default function Login() {
         console.error("Error adding document: ", e);
       }
       localStorage.setItem("uid", userCredential.user.uid);
-      router.push(`/home/123`);
+      router.push(`/home`);
 
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
