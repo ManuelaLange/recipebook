@@ -6,18 +6,21 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, getDocs, addDoc, setDoc, doc } from "firebase/firestore";
+import { addDoc,  doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
+import {Loading} from './components/Loading'
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { userSession, setUserSession } = useContext(UserContext);
+  const { setUserSession } = useContext(UserContext);
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
+  const [loadingVisible, setLoadingVisible] = useState(false)
 
   useEffect(() => {
     const accessToken = localStorage.getItem("uid");
@@ -30,6 +33,7 @@ export default function Login() {
 
   async function signInUser(e, email, password) {
     e.preventDefault();
+    setLoadingVisible(true)
     if (!email || !password) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
@@ -47,27 +51,22 @@ export default function Login() {
       router.push(`/home`);
       setEmail("");
       setPassword("");
+      setLoadingVisible(false)
     } catch (err) {
       console.log(err);
     }
   }
 
-  // Storage.get userSession
 
-  // if existir
-  //   firebaseConfig.validateSession(userSession)
-  // else
-  //   login
-
-  async function signUpUser(e, email, password) {
+  async function signUpUser(e, email, password, name, lastname) {
     console.log("dsadas");
     e.preventDefault();
+    setLoadingVisible(true)
 
     if (!email || !password || !lastname || !name) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
     }
-
     try {
       // Cria um novo usuário com email e senha
       const userCredential = await createUserWithEmailAndPassword(
@@ -75,15 +74,17 @@ export default function Login() {
         email,
         password
       );
-      const uid = userCredential.user.uid
+    
 
       try {
-        setDoc(doc(db, "users", uid), {
+        const docRef= doc(db, "users")
+        const newuser = await setDoc(docRef, {
           username: name,
+          lastname:lastname,
           email: email,
           password: password,
         });
-        console.log("Document written with ID: ", uid);
+        console.log("Document written with ID: ", newuser);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -94,6 +95,7 @@ export default function Login() {
     } catch (error) {
       console.log("Erro ao registrar usuário:", error);
     }
+    setLoadingVisible(false)
 
     setEmail("");
     setPassword("");
@@ -144,7 +146,7 @@ export default function Login() {
               type="submit"
               className="w-full bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition duration-300"
             >
-              Entrar
+              {!loadingVisible ? ("Entrar") : (<Loading />) }
             </button>
 
             <div className="text-center text-gray-600 mt-4">
@@ -219,7 +221,8 @@ export default function Login() {
               type="submit"
               className="w-full bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition duration-300"
             >
-              Cadastrar e entrar
+              {!loadingVisible ? ("Cadastrar e entrar") : (<Loading />) }
+             
             </button>
             <div className="text-center text-gray-600 mt-1">
               <a

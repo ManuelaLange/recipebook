@@ -1,25 +1,28 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { collection, getDocs, addDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, getDoc, query, where } from "firebase/firestore";
 import { db } from "./configFirebase";
 import { UserContext } from "./context";
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const RecipeContext = createContext();
 
 const RecipeProvider = ({ children }) => {
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
-  const uid = userSession;
+  const[recipesUser, setRecipeUser] = useState([])
+
 
   const fetchUserRecipes = async () => {
     try {
-      const recipesCollectionRef = collection(db, "users", uid, "recipes");
-      const querySnapshot = await getDocs(recipesCollectionRef);
+      const iduser=userSession
+      const recipesCollectionUser = query(collection(db, "recipes"), where("user_id", "==", iduser ))
+      const querySnapshot = await getDocs(recipesCollectionUser)
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
-      setRecipes(userRecipes);
       console.log(userRecipes);
+      
+      setRecipeUser(userRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
     }
@@ -32,6 +35,25 @@ const RecipeProvider = ({ children }) => {
     return;
   }, [userSession]);
 
+
+  const fetchRecipes = async () => {
+    try {
+      console.log("fetchRecipes");
+      console.log("userSession", userSession);
+
+      const querySnapshot = await getDocs(collection(db, "recipes"));
+      const allRecipes = querySnapshot.forEach((doc) => doc.data());
+      setRecipes(allRecipes)
+    } catch (e) {
+      console.error("Erro ao buscar as receitas ", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+  
+
   async function addRecipe({
     name,
     category,
@@ -43,7 +65,7 @@ const RecipeProvider = ({ children }) => {
     const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
     const categoryValue = category.toLowerCase().replace(/\s+/g, "-"); // transforma a categoria em lowercase para fins de consistência
     const newRecipe = {
-      id: v4(),
+      id: uuidv4(),
       user_id: userSession,
       category,
       categoryValue,
@@ -57,23 +79,23 @@ const RecipeProvider = ({ children }) => {
     try {
       const docRef = await addDoc(collection(db, "recipes"), newRecipe);
       console.log("Document written with ID: ", docRef);
-      setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
+      setRecipeUser((prevRecipes) => [...prevRecipes, newRecipe]);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   }
 
-  async function editedRecipes() {
-    const colRef = doc(db, "users", userSession, "recipes");
+  // async function editedRecipes() {
+  //   const colRef = doc(db, "users", userSession, "recipes");
 
-    recipes.map((rec) =>
-      rec.id === editingRecipeId ? { ...rec, ...formData } : rec
-    );
-  }
+  //   recipes.map((rec) =>
+  //     rec.id === editingRecipeId ? { ...rec, ...formData } : rec
+  //   );
+  // }
 
   return (
     <RecipeContext.Provider
-      value={{ recipes, setRecipes, addRecipe, editedRecipes }}
+      value={{ recipes, setRecipes, addRecipe, recipesUser, setRecipeUser }}
     >
       {children}
     </RecipeContext.Provider>

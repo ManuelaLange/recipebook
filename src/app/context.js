@@ -46,13 +46,13 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-// enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// arrumar o header para não aparecer só na pagina de login
-// colocar um if se a pessoa não tiver receita.
-// demora pra entrar
 // logar com o google 
 // colocar mensagens de sucesso ao longo do site
 // colocar campo de loading na entrada.
+// enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
+// arrumar o header para não aparecer só na pagina de login
 // fazer pagina de cateogrias.
 // editar receita não salva no banco de dados
+// demora pra entrar
+// adicinar um icone de favoritos
 
