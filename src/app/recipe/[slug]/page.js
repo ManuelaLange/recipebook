@@ -20,9 +20,6 @@ export default function Page({ params }) {
     setOpenModalEditForm(false);
   }
 
-
- 
-
   return (
     <div>
       <div className="flex flex-row justify-between pt-24 items-center max-w-screen-lg m-auto hover:text-orange-600">
@@ -64,41 +61,40 @@ export default function Page({ params }) {
 
       <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <div>
-        <h1 className="my-3 font-semibold text-3xl text-orange-500">
-          {pageRecipe.name}
-        </h1>
-        <h1 className="mb-3 text-center text-base text-orange-500">
-          Categoria: {pageRecipe.category}
-        </h1>
-        <h1 className="mb-3 text-center text-base text-orange-500">
-          Tempo de preparo: {pageRecipe.time}
-        </h1>
+          <h1 className="my-3 font-semibold text-3xl text-orange-500">
+            {pageRecipe.name}
+          </h1>
+          <h1 className="mb-3 text-center text-base text-orange-500">
+            Categoria: {pageRecipe.category}
+          </h1>
+          <h1 className="mb-3 text-center text-base text-orange-500">
+            Tempo de preparo: {pageRecipe.time}
+          </h1>
         </div>
         <div className="flex flex-row justify-between w-full items-center">
-        <div
-          className="bg-center bg-cover mx-10 w-3/5 h-80"
-          style={{
-            backgroundImage: `url(${pageRecipe.img})`,
-            borderRadius: "10%",
-          }}
-        ></div>
-        <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
-          <div>
-            <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
-              Ingredientes
-            </h3>
-            <ul className="custom-list list-[disc] mx-10 ">
-              {pageRecipe.ingredients.map((ingredient) => {
-                return (
-                  <li key={ingredient} className="boder border-b-2 mb-2 ">
-                    {ingredient}
-                  </li>
-                );
-              })}
-            </ul>
+          <div
+            className="bg-center bg-cover mx-10 w-3/5 h-80"
+            style={{
+              backgroundImage: `url(${pageRecipe.img})`,
+              borderRadius: "10%",
+            }}
+          ></div>
+          <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
+            <div>
+              <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
+                Ingredientes
+              </h3>
+              <ul className="custom-list list-[disc] mx-10 ">
+                {pageRecipe.ingredients.map((ingredient) => {
+                  return (
+                    <li key={ingredient} className="boder border-b-2 mb-2 ">
+                      {ingredient}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-        </div>
-
         </div>
 
         <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
