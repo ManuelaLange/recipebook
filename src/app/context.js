@@ -25,6 +25,7 @@ const UserProvider = ({ children }) => {
     // Observar mudanças no status de autenticação
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
+        console.log("user", user);
         // Usuário logado, armazenar o uid
         setUserSession(user.uid);
         console.log(user.uid);
@@ -46,7 +47,7 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-// logar com o google 
+// logar com o google
 // colocar mensagens de sucesso ao longo do site
 // colocar campo de loading na entrada.
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
@@ -55,4 +56,3 @@ export { UserProvider, UserContext };
 // editar receita não salva no banco de dados
 // demora pra entrar
 // adicinar um icone de favoritos
-

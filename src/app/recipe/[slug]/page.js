@@ -5,11 +5,17 @@ import { useRouter } from "next/navigation";
 import { IoMdArrowBack } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import Form from "../../components/Form";
+import { use } from "react";
 
 export default function Page({ params }) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
-  const pageRecipe = recipes.find((recipe) => recipe.pageName === params.slug);
+  console.log(recipes);
+  const pageRecipe = recipes.find(
+    (recipe) => recipe.pageName === resolvedParams.slug
+  );
+  console.log("pageRecipe", pageRecipe);
 
   const [openModalEditForm, setOpenModalEditForm] = useState(false);
 

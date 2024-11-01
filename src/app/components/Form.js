@@ -17,11 +17,11 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
-    name:'',
+    name: "",
     category: "",
     time: "",
-    ingredients: [''],
-    instructions: [''],
+    ingredients: [""],
+    instructions: [""],
     img: "",
   });
   const [editingRecipeId, setEditingRecipeId] = useState(null); // caso a pessoa esteja editando uma receita, é por esse id que saberá qual receita mostrar no formulario
@@ -426,6 +426,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
           <div className="w-full mb-2 flex flex-col">
             <label className="text-gray-700 font-bold">Anexar Imagem:</label>
+            ' '{" "}
             <input
               name="img"
               type="text"

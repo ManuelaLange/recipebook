@@ -1,27 +1,36 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { collection, getDocs, addDoc, getDoc, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  getDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "./configFirebase";
 import { UserContext } from "./context";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const RecipeContext = createContext();
 
 const RecipeProvider = ({ children }) => {
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
-  const[recipesUser, setRecipeUser] = useState([])
-
+  const [recipesUser, setRecipeUser] = useState([]);
 
   const fetchUserRecipes = async () => {
     try {
-      const iduser=userSession
-      const recipesCollectionUser = query(collection(db, "recipes"), where("user_id", "==", iduser ))
-      const querySnapshot = await getDocs(recipesCollectionUser)
+      const iduser = userSession;
+      const recipesCollectionUser = query(
+        collection(db, "recipes"),
+        where("user_id", "==", iduser)
+      );
+      const querySnapshot = await getDocs(recipesCollectionUser);
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
       console.log(userRecipes);
-      
+
       setRecipeUser(userRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
@@ -35,15 +44,17 @@ const RecipeProvider = ({ children }) => {
     return;
   }, [userSession]);
 
-
   const fetchRecipes = async () => {
     try {
       console.log("fetchRecipes");
       console.log("userSession", userSession);
 
       const querySnapshot = await getDocs(collection(db, "recipes"));
-      const allRecipes = querySnapshot.forEach((doc) => doc.data());
-      setRecipes(allRecipes)
+      const allRecipes = querySnapshot.docs.map((doc) => {
+        return doc.data();
+      });
+      console.log("allRecipes", allRecipes);
+      setRecipes(allRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
     }
@@ -52,7 +63,6 @@ const RecipeProvider = ({ children }) => {
   useEffect(() => {
     fetchRecipes();
   }, []);
-  
 
   async function addRecipe({
     name,
