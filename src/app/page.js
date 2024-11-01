@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { addDoc,  doc, setDoc } from "firebase/firestore";
+import { addDoc,  collection,  doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
 import {Loading} from './components/Loading'
@@ -16,20 +16,20 @@ export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setUserSession } = useContext(UserContext);
+  const { setUserSession, userSession } = useContext(UserContext);
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
   const [loadingVisible, setLoadingVisible] = useState(false)
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("uid");
-    if (accessToken) {
-      router.push(`/home`);
-    } else {
-      router.push(`/`);
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem("uid");
+  //   if (accessToken) {
+  //     router.push(`/home`);
+  //   } else {
+  //     router.push(`/`);
+  //   }
+  // }, [router]);
 
   async function signInUser(e, email, password) {
     e.preventDefault();
@@ -44,8 +44,8 @@ export default function Login() {
         email,
         password
       );
-      setUserSession(userCredential);
-      localStorage.setItem("uid", userCredential.user.uid);
+      setUserSession(userCredential.uid);
+      // localStorage.setItem("uid", userCredential.user.uid);
 
       console.log("user", userCredential);
       router.push(`/home`);
@@ -74,11 +74,12 @@ export default function Login() {
         email,
         password
       );
+      console.log('usuário novo', userCredential)
     
 
       try {
-        const docRef= doc(db, "users")
-        const newuser = await setDoc(docRef, {
+        const collectionRef= doc(db, "users", userCredential.user.uid)
+        const newuser = await setDoc(collectionRef, {
           username: name,
           lastname:lastname,
           email: email,
@@ -88,7 +89,7 @@ export default function Login() {
       } catch (e) {
         console.error("Error adding document: ", e);
       }
-      localStorage.setItem("uid", userCredential.user.uid);
+      // localStorage.setItem("uid", userCredential.user.uid);
       router.push(`/home`);
 
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.

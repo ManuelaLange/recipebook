@@ -24,12 +24,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     // Observar mudanças no status de autenticação
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        console.log("user", user);
-        // Usuário logado, armazenar o uid
-        setUserSession(user.uid);
-        console.log(user.uid);
-      } else {
+      if (!user) {
         // Usuário deslogado, limpar o estado
         setUserSession("");
       }

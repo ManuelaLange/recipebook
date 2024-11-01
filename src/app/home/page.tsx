@@ -68,6 +68,9 @@ export default function Home() {
     router.push(`/recipe/${recipe.pageName}`);
   }
 
+  console.log('receitas ', 
+    !recipes)
+
   return (
     <div>
       <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
@@ -88,12 +91,12 @@ export default function Home() {
       </div>
 
       {recipes ? (
-        recipes.map((recipe: Recipe, index: number) => (
-          <div
-            key={index}
-            className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg "
-          >
+        <div
+          className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg "
+        >
+        {recipes.map((recipe: Recipe, index: number) => (
             <button
+            key={index}
               onClick={() =>
                 handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
               }
@@ -106,8 +109,8 @@ export default function Home() {
               )}
               <p>{recipe.name}</p>
             </button>
-          </div>
-        ))
+          
+        ))}</div>
       ) : (
         <div className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
           <h4 className=" ">Nenhuma receita cadastrada no nosso banco</h4>
@@ -122,11 +125,11 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
         {recipesUser ? (
-          recipesUser.map((recipe: Recipe) => (
+          <div   className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+         { recipesUser.map((recipe: Recipe, index:number) => (
             <button
-              key={recipe.id}
+             key={index}
               onClick={() =>
                 handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
               }
@@ -143,13 +146,13 @@ export default function Home() {
               )}
               <p>{recipe.name}</p>
             </button>
-          ))
+          ))}
+          </div>
         ) : (
           <div className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
             <h4 className=" ">Você ainda não possui receita cadastrada.</h4>
           </div>
         )}
-      </div>
 
       {modalNewRecipe && (
         <Form recipe={null} closeModalFormRecipe={CloseModalRecipe} />

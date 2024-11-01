@@ -22,14 +22,15 @@ const RecipeProvider = ({ children }) => {
 
   const fetchUserRecipes = async () => {
     try {
-      const iduser = userSession;
+     
+      console.log('iduser',userSession )
       const recipesCollectionUser = query(
         collection(db, "recipes"),
-        where("user_id", "==", iduser)
+        where("user_id", "==", userSession)
       );
       const querySnapshot = await getDocs(recipesCollectionUser);
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
-      console.log(userRecipes);
+      console.log('receitas do usuário',userRecipes )
 
       setRecipeUser(userRecipes);
     } catch (e) {
