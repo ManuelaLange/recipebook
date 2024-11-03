@@ -23,38 +23,15 @@ export default function Home() {
   const router = useRouter();
   const { search } = useContext(SearchContext);
   const { userSession } = useContext(UserContext);
-  // const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([])
 
-  // const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
+  const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
-  // // const searchRecipe = recipes.filter((recipe: { name: string }) =>
-  // //   recipe.name.toLowerCase().includes(lowerSearch)
-  // // );
-
-  // useEffect(() => {
-  //   const fetchFilteredRecipes = async () => {
-  //     try {
-  //       const recipesQuery = query(recipes, where("name", ">=", lowerSearch));
-  //       const querySnapshot = await getDocs(recipesQuery);
-
-  //       const result = querySnapshot.docs.map((doc) => (doc.data()));
-
-  //       setFilteredRecipes(result);
-  //     } catch (error) {
-  //       console.error("Erro ao buscar as receitas filtradas: ", error);
-  //     }
-  //   };
-
-  //   if (search) {
-  //     fetchFilteredRecipes();
-  //   } else {
-  //     setFilteredRecipes([]); // Limpa o filtro quando não há termo de busca
-  //   }
-  // }, [search]);
-
-  // const searchRecipeUser = recipesUser.filter((recipe: { name: string }) =>
-  //   recipe.name.toLowerCase().includes(lowerSearch)
-  // );
+  const searchRecipe = recipes.filter((recipe: { name: string }) =>
+    recipe.name.toLowerCase().includes(lowerSearch)
+  );
+  const searchRecipeUser = recipesUser.filter((recipe: { name: string }) =>
+    recipe.name.toLowerCase().includes(lowerSearch)
+  );
 
   function NewRecipe() {
     SetModalNewRecipe(true);
@@ -67,9 +44,6 @@ export default function Home() {
   function handleRecipePage(recipe: { id: string; pageName: string }) {
     router.push(`/recipe/${recipe.pageName}`);
   }
-
-  console.log('receitas ', 
-    !recipes)
 
   return (
     <div>
@@ -91,12 +65,10 @@ export default function Home() {
       </div>
 
       {recipes ? (
-        <div
-          className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg "
-        >
-        {recipes.map((recipe: Recipe, index: number) => (
+        <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+          {searchRecipe.map((recipe: Recipe, index: number) => (
             <button
-            key={index}
+              key={index}
               onClick={() =>
                 handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
               }
@@ -109,8 +81,8 @@ export default function Home() {
               )}
               <p>{recipe.name}</p>
             </button>
-          
-        ))}</div>
+          ))}
+        </div>
       ) : (
         <div className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
           <h4 className=" ">Nenhuma receita cadastrada no nosso banco</h4>
@@ -125,13 +97,16 @@ export default function Home() {
         </a>
       </div>
 
-        {recipesUser ? (
-          <div   className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-         { recipesUser.map((recipe: Recipe, index:number) => (
+      {recipesUser ? (
+        <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+          {searchRecipeUser.map((recipe: Recipe, index: number) => (
             <button
-             key={index}
+              key={index}
               onClick={() =>
-                handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
+                handleRecipePage({
+                  id: recipe.id,
+                  pageName: recipe.pageName,
+                })
               }
               className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
             >
@@ -147,12 +122,12 @@ export default function Home() {
               <p>{recipe.name}</p>
             </button>
           ))}
-          </div>
-        ) : (
-          <div className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
-            <h4 className=" ">Você ainda não possui receita cadastrada.</h4>
-          </div>
-        )}
+        </div>
+      ) : (
+        <div className="text-gray-400 justify-center max-w-screen-lg m-auto mb-4 font-[family-name:var(--font-geist-sans)]">
+          <h4 className=" ">Você ainda não possui receita cadastrada.</h4>
+        </div>
+      )}
 
       {modalNewRecipe && (
         <Form recipe={null} closeModalFormRecipe={CloseModalRecipe} />

@@ -22,17 +22,15 @@ const RecipeProvider = ({ children }) => {
 
   const fetchUserRecipes = async () => {
     try {
-     
-      console.log('iduser',userSession )
       const recipesCollectionUser = query(
         collection(db, "recipes"),
         where("user_id", "==", userSession)
       );
       const querySnapshot = await getDocs(recipesCollectionUser);
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
-      console.log('receitas do usuário',userRecipes )
 
       setRecipeUser(userRecipes);
+      console.log("receitas do usuário", userRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
     }
@@ -47,14 +45,12 @@ const RecipeProvider = ({ children }) => {
 
   const fetchRecipes = async () => {
     try {
-      console.log("fetchRecipes");
-      console.log("userSession", userSession);
-
       const querySnapshot = await getDocs(collection(db, "recipes"));
+
       const allRecipes = querySnapshot.docs.map((doc) => {
         return doc.data();
       });
-      console.log("allRecipes", allRecipes);
+
       setRecipes(allRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);

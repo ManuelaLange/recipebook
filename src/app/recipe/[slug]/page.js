@@ -11,7 +11,7 @@ export default function Page({ params }) {
   const resolvedParams = use(params);
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
-  console.log(recipes);
+
   const pageRecipe = recipes.find(
     (recipe) => recipe.pageName === resolvedParams.slug
   );
@@ -41,7 +41,7 @@ export default function Page({ params }) {
               color: "#f97316",
               hover: "#ea580c",
             }}
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/home")}
           >
             Voltar
           </span>

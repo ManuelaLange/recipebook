@@ -1,10 +1,11 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, use } from "react";
 import { RecipeContext } from "@/app/recipeContext";
 import { CategoryContext } from "@/app/categoryContext";
 import { useRouter } from "next/navigation";
-import { SearchContext } from "../../searchContext";
+import { SearchContext } from "../../context";
+import { MdOutlineHideImage } from "react-icons/md";
 
 export default function Page({ params }) {
   const router = useRouter();
@@ -13,16 +14,14 @@ export default function Page({ params }) {
   const { search, setSearch } = useContext(SearchContext);
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
+  const resolvedParams = use(params);
   const pageCategory = categoryRecipes.find(
-    (category) => category.title === params.slug
+    (category) => category.title === resolvedParams.slug
   );
-  console.log("page", pageCategory);
-  console.log("params", params);
 
   const recipeFilterCategory = recipes.filter(
     (recipe) => recipe.categoryValue === pageCategory.title
   );
-  console.log({ recipes });
 
   const searchRecipe = recipeFilterCategory.filter((recipe) =>
     recipe.name.toLowerCase().includes(lowerSearch)
@@ -48,7 +47,15 @@ export default function Page({ params }) {
               onClick={() => handleRecipePage(recipe)}
               className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
             >
-              <img className="w-36 h-28 rounded-lg w-" src={recipe.img}></img>
+              {recipe.img ? (
+                <img
+                  className="w-36 h-28 rounded-lg"
+                  src={recipe.img}
+                  alt="Recipe Image"
+                />
+              ) : (
+                <MdOutlineHideImage className="w-14 h-14 rounded-lg text-gray-500" />
+              )}
               <p>{recipe.name}</p>
             </button>
           );

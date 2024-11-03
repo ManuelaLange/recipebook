@@ -6,11 +6,11 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { addDoc,  collection,  doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, query, where } from "firebase/firestore";
 import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
-import {Loading} from './components/Loading'
-import { v4 as uuidv4 } from 'uuid';
+import { Loading } from "./components/Loading";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
@@ -20,20 +20,27 @@ export default function Login() {
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
-  const [loadingVisible, setLoadingVisible] = useState(false)
+  const [loadingVisible, setLoadingVisible] = useState(false);
 
+  const accessToken = query(
+    collection(db, "users"),
+    where("uid", "==", userSession)
+  );
   // useEffect(() => {
-  //   const accessToken = localStorage.getItem("uid");
-  //   if (accessToken) {
+  //   if (accessToken.exists()) {
   //     router.push(`/home`);
-  //   } else {
-  //     router.push(`/`);
   //   }
   // }, [router]);
+  useEffect(() => {
+    // If userSession exists (user is logged in), redirect to home
+    if (userSession) {
+      router.push("/home");
+    }
+  }, [userSession, router]);
 
   async function signInUser(e, email, password) {
     e.preventDefault();
-    setLoadingVisible(true)
+    setLoadingVisible(true);
     if (!email || !password) {
       console.error("Todos os campos são obrigatórios.");
       return; // Interrompe a função se houver algum campo vazio
@@ -44,27 +51,26 @@ export default function Login() {
         email,
         password
       );
-      setUserSession(userCredential.uid);
+      console.log("user", userCredential);
       // localStorage.setItem("uid", userCredential.user.uid);
 
-      console.log("user", userCredential);
       router.push(`/home`);
       setEmail("");
       setPassword("");
-      setLoadingVisible(false)
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoadingVisible(false);
     }
   }
 
-
   async function signUpUser(e, email, password, name, lastname) {
-    console.log("dsadas");
     e.preventDefault();
-    setLoadingVisible(true)
+    setLoadingVisible(true);
 
     if (!email || !password || !lastname || !name) {
       console.error("Todos os campos são obrigatórios.");
+      setLoadingVisible(false);
       return; // Interrompe a função se houver algum campo vazio
     }
     try {
@@ -74,14 +80,12 @@ export default function Login() {
         email,
         password
       );
-      console.log('usuário novo', userCredential)
-    
 
       try {
-        const collectionRef= doc(db, "users", userCredential.user.uid)
+        const collectionRef = doc(db, "users", userCredential.user.uid);
         const newuser = await setDoc(collectionRef, {
           username: name,
-          lastname:lastname,
+          lastname: lastname,
           email: email,
           password: password,
         });
@@ -95,11 +99,11 @@ export default function Login() {
       // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
       console.log("Erro ao registrar usuário:", error);
+    } finally {
+      setLoadingVisible(false);
+      setEmail("");
+      setPassword("");
     }
-    setLoadingVisible(false)
-
-    setEmail("");
-    setPassword("");
   }
 
   return (
@@ -147,7 +151,7 @@ export default function Login() {
               type="submit"
               className="w-full bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition duration-300"
             >
-              {!loadingVisible ? ("Entrar") : (<Loading />) }
+              {!loadingVisible ? "Entrar" : <Loading />}
             </button>
 
             <div className="text-center text-gray-600 mt-4">
@@ -222,8 +226,7 @@ export default function Login() {
               type="submit"
               className="w-full bg-orange-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition duration-300"
             >
-              {!loadingVisible ? ("Cadastrar e entrar") : (<Loading />) }
-             
+              {!loadingVisible ? "Cadastrar e entrar" : <Loading />}
             </button>
             <div className="text-center text-gray-600 mt-1">
               <a

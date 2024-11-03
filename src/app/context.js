@@ -24,7 +24,24 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     // Observar mudanças no status de autenticação
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (!user) {
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          const tokenResult = await user.getIdTokenResult();
+          console.log(tokenResult);
+
+          // Check token expiration
+          if (new Date().getTime() / 1000 > tokenResult.expirationTime) {
+            await auth.signOut();
+            setUserSession("");
+          } else {
+            setUserSession(user.uid);
+          }
+        } catch (error) {
+          console.error("Token validation error:", error);
+          setUserSession("");
+        }
+      } else {
         // Usuário deslogado, limpar o estado
         setUserSession("");
       }
@@ -42,12 +59,11 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
+// arrumar o login automatico
 // logar com o google
 // colocar mensagens de sucesso ao longo do site
-// colocar campo de loading na entrada.
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// arrumar o header para não aparecer só na pagina de login
 // fazer pagina de cateogrias.
 // editar receita não salva no banco de dados
-// demora pra entrar
 // adicinar um icone de favoritos
+// aparecer o botão de editar apenas nas receitas do usuario

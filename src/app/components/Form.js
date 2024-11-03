@@ -426,7 +426,6 @@ export default function Form({ closeModalFormRecipe, recipe }) {
 
           <div className="w-full mb-2 flex flex-col">
             <label className="text-gray-700 font-bold">Anexar Imagem:</label>
-            ' '{" "}
             <input
               name="img"
               type="text"
@@ -434,6 +433,7 @@ export default function Form({ closeModalFormRecipe, recipe }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-orange-500"
               value={formData.img}
               onChange={handleInputChange}
+              required
             />
           </div>
 

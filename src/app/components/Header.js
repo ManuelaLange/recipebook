@@ -5,28 +5,32 @@ import { CategoryContext } from "../categoryContext";
 import { useContext, useState, useRef, useEffect } from "react";
 import { FaBook } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
+import { IoLogOutOutline } from "react-icons/io5";
 import { RecipeContext } from "../recipeContext";
-import { SearchContext } from "../context";
-import { UserProvider, UserContext } from "../context";
+import { SearchContext, UserContext } from "../context";
 
 export default function Header() {
   const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef(null);
   const router = useRouter();
   const { categoryRecipes } = useContext(CategoryContext);
-  const { recipes } = useContext(RecipeContext);
+  // const { recipes } = useContext(RecipeContext);
   const { search, setSearch } = useContext(SearchContext);
-  const {userSession} = useContext(UserContext) 
+  const { userSession, setUserSession } = useContext(UserContext);
 
-  const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
-  
-  const searchRecipe = recipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(lowerSearch)
-  );
-  console.log({ searchRecipe });
+  // const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
+
+  // const searchRecipe = recipes.filter((recipe) =>
+  //   recipe.name.toLowerCase().includes(lowerSearch)
+  // );
+  // console.log({ searchRecipe });
 
   function toggleDropdown() {
     setIsDropdownOpen((prevState) => !prevState);
+  }
+  function logout() {
+    router.push("/");
+    setUserSession(null);
   }
 
   useEffect(() => {
@@ -45,11 +49,12 @@ export default function Header() {
     router.push(`/recipefilter/${title}`);
   }
 
+  if (!userSession) return null;
   return (
     <header className="h-12 bg-orange-100 flex items-center justify-between">
       <div className="flex items-center space-x-6 mx-6">
         <FaBook
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/home")}
           className="hover:text-orange-600 cursor-pointer"
           size={24}
           style={{ color: "#f97316" }}
@@ -121,6 +126,12 @@ export default function Header() {
         <button className="bg-orange-500 text-white px-4 py-1 rounded-lg hover:bg-orange-400">
           Pesquisar
         </button>
+        <IoLogOutOutline
+          onClick={logout}
+          className="hover:text-orange-600 cursor-pointer"
+          size={24}
+          style={{ color: "#f97316" }}
+        />
       </div>
     </header>
   );
