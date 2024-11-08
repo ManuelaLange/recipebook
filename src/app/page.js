@@ -10,13 +10,13 @@ import { collection, doc, setDoc, query, where } from "firebase/firestore";
 import { auth, db } from "./configFirebase";
 import { UserContext } from "./context";
 import { Loading } from "./components/Loading";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setUserSession, userSession } = useContext(UserContext);
+  const { userSession, refreshSession } = useContext(UserContext);
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
@@ -32,11 +32,15 @@ export default function Login() {
   //   }
   // }, [router]);
   useEffect(() => {
-    // If userSession exists (user is logged in), redirect to home
-    if (userSession) {
-      router.push("/home");
-    }
-  }, [userSession, router]);
+    const checkAndRedirect = async () => {
+      if (userSession) {
+        await refreshSession();
+        router.replace("/home");
+      }
+    };
+
+    checkAndRedirect();
+  }, [userSession, router, refreshSession]);
 
   async function signInUser(e, email, password) {
     e.preventDefault();

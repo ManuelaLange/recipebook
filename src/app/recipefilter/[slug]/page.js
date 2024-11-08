@@ -11,7 +11,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const { recipes } = useContext(RecipeContext);
   const { categoryRecipes } = useContext(CategoryContext);
-  const { search, setSearch } = useContext(SearchContext);
+  const { search } = useContext(SearchContext);
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
   const resolvedParams = use(params);

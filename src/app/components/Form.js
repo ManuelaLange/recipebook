@@ -13,15 +13,15 @@ import { v4 as uuidv4 } from "uuid";
 export default function Form({ closeModalFormRecipe, recipe }) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
-  const { recipes, addRecipe, setRecipes } = useContext(RecipeContext);
+  const { addRecipe } = useContext(RecipeContext);
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
     name: "",
     category: "",
     time: "",
-    ingredients: [""],
-    instructions: [""],
+    ingredients: [],
+    instructions: [],
     img: "",
   });
   const [editingRecipeId, setEditingRecipeId] = useState(null); // caso a pessoa esteja editando uma receita, é por esse id que saberá qual receita mostrar no formulario

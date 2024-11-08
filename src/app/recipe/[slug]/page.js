@@ -1,6 +1,6 @@
 "use client";
-import { RecipeContext } from "../../recipeContext";
-import { useContext, useState } from "react";
+import { RecipeContext } from "@/app/recipeContext";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoMdArrowBack } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
@@ -8,14 +8,15 @@ import Form from "../../components/Form";
 import { use } from "react";
 
 export default function Page({ params }) {
-  const resolvedParams = use(params);
-  const router = useRouter();
   const { recipes } = useContext(RecipeContext);
+  console.log("recipes", recipes);
+  const resolvedParams = use(params);
+  console.log("resolvedParams", resolvedParams.id);
+  const router = useRouter();
 
   const pageRecipe = recipes.find(
     (recipe) => recipe.pageName === resolvedParams.slug
   );
-  console.log("pageRecipe", pageRecipe);
 
   const [openModalEditForm, setOpenModalEditForm] = useState(false);
 
@@ -25,7 +26,6 @@ export default function Page({ params }) {
   function closeFormEditRecipe() {
     setOpenModalEditForm(false);
   }
-
   return (
     <div>
       <div className="flex flex-row justify-between pt-24 items-center max-w-screen-lg m-auto hover:text-orange-600">
@@ -68,20 +68,20 @@ export default function Page({ params }) {
       <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <div>
           <h1 className="my-3 font-semibold text-3xl text-orange-500">
-            {pageRecipe.name}
+            {pageRecipe && pageRecipe.name}
           </h1>
           <h1 className="mb-3 text-center text-base text-orange-500">
-            Categoria: {pageRecipe.category}
+            Categoria: {pageRecipe && pageRecipe.category}
           </h1>
           <h1 className="mb-3 text-center text-base text-orange-500">
-            Tempo de preparo: {pageRecipe.time}
+            Tempo de preparo: {pageRecipe && pageRecipe.time}
           </h1>
         </div>
         <div className="flex flex-row justify-between w-full items-center">
           <div
             className="bg-center bg-cover mx-10 w-3/5 h-80"
             style={{
-              backgroundImage: `url(${pageRecipe.img})`,
+              backgroundImage: `url(${pageRecipe && pageRecipe.img})`,
               borderRadius: "10%",
             }}
           ></div>
@@ -91,13 +91,14 @@ export default function Page({ params }) {
                 Ingredientes
               </h3>
               <ul className="custom-list list-[disc] mx-10 ">
-                {pageRecipe.ingredients.map((ingredient) => {
-                  return (
-                    <li key={ingredient} className="boder border-b-2 mb-2 ">
-                      {ingredient}
-                    </li>
-                  );
-                })}
+                {pageRecipe &&
+                  pageRecipe.ingredients.map((ingredient) => {
+                    return (
+                      <li key={ingredient} className="boder border-b-2 mb-2 ">
+                        {ingredient}
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           </div>
@@ -109,13 +110,14 @@ export default function Page({ params }) {
               Modo de preparo
             </h3>
             <ol className="custom-list list-[decimal] mx-10 ">
-              {pageRecipe.instructions.map((instruction) => {
-                return (
-                  <li key={instruction} className="boder border-b-2 mb-2 ">
-                    {instruction}
-                  </li>
-                );
-              })}
+              {pageRecipe &&
+                pageRecipe.instructions.map((instruction) => {
+                  return (
+                    <li key={instruction} className="boder border-b-2 mb-2 ">
+                      {instruction}
+                    </li>
+                  );
+                })}
             </ol>
           </div>
         </div>

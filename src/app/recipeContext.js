@@ -19,6 +19,7 @@ const RecipeProvider = ({ children }) => {
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
   const [recipesUser, setRecipeUser] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserRecipes = async () => {
     try {
@@ -28,11 +29,14 @@ const RecipeProvider = ({ children }) => {
       );
       const querySnapshot = await getDocs(recipesCollectionUser);
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
+      setLoading(true);
 
       setRecipeUser(userRecipes);
       console.log("receitas do usuário", userRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +44,6 @@ const RecipeProvider = ({ children }) => {
     if (userSession) {
       fetchUserRecipes();
     }
-    return;
   }, [userSession]);
 
   const fetchRecipes = async () => {
@@ -50,10 +53,13 @@ const RecipeProvider = ({ children }) => {
       const allRecipes = querySnapshot.docs.map((doc) => {
         return doc.data();
       });
+      setLoading(true);
 
       setRecipes(allRecipes);
     } catch (e) {
       console.error("Erro ao buscar as receitas ", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,7 +108,14 @@ const RecipeProvider = ({ children }) => {
 
   return (
     <RecipeContext.Provider
-      value={{ recipes, setRecipes, addRecipe, recipesUser, setRecipeUser }}
+      value={{
+        recipes,
+        setRecipes,
+        addRecipe,
+        recipesUser,
+        setRecipeUser,
+        loading,
+      }}
     >
       {children}
     </RecipeContext.Provider>

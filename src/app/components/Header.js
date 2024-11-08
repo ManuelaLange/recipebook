@@ -6,7 +6,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { FaBook } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
 import { IoLogOutOutline } from "react-icons/io5";
-import { RecipeContext } from "../recipeContext";
+// import { RecipeContext } from "../recipeContext";
 import { SearchContext, UserContext } from "../context";
 
 export default function Header() {

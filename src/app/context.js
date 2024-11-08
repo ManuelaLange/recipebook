@@ -51,19 +51,34 @@ const UserProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const refreshSession = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await user.getIdToken(true); // Force token refresh
+      } catch (error) {
+        console.error("Token refresh error:", error);
+        await auth.signOut();
+        setUserSession("");
+      }
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ userSession, setUserSession }}>
+    <UserContext.Provider
+      value={{ userSession, setUserSession, refreshSession }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
 export { UserProvider, UserContext };
 
-// arrumar o login automatico
+// Adicionar loading na pagina da receita
 // logar com o google
 // colocar mensagens de sucesso ao longo do site
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// fazer pagina de cateogrias.
 // editar receita não salva no banco de dados
+// fazer pagina de cateogrias.
 // adicinar um icone de favoritos
 // aparecer o botão de editar apenas nas receitas do usuario
