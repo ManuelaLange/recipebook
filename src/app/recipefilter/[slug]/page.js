@@ -6,10 +6,11 @@ import { CategoryContext } from "@/app/categoryContext";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../../context";
 import { MdOutlineHideImage } from "react-icons/md";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function Page({ params }) {
   const router = useRouter();
-  const { recipes } = useContext(RecipeContext);
+  const { recipes, handleSelectedRecipe } = useContext(RecipeContext);
   const { categoryRecipes } = useContext(CategoryContext);
   const { search } = useContext(SearchContext);
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
@@ -29,11 +30,18 @@ export default function Page({ params }) {
 
   function handleRecipePage(recipe) {
     router.push(`/recipe/${recipe.pageName}`);
+    handleSelectedRecipe(recipe);
   }
 
   return (
     <div>
-      <div className="flex flex-col items-center py-24 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
+      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24">
+        <IoMdArrowBack
+          className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
+          onClick={() => router.push("/")}
+        />
+      </div>
+      <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <h1 className="my-3 font-semibold text-3xl text-orange-500">
           {pageCategory.name}
         </h1>

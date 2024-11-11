@@ -19,7 +19,8 @@ const RecipeProvider = ({ children }) => {
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
   const [recipesUser, setRecipeUser] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   const fetchUserRecipes = async () => {
     try {
@@ -106,6 +107,11 @@ const RecipeProvider = ({ children }) => {
   //   );
   // }
 
+  function handleSelectedRecipe(recipe) {
+    setSelectedRecipe(recipe);
+  }
+  console.log("receita selecionada", selectedRecipe);
+
   return (
     <RecipeContext.Provider
       value={{
@@ -115,6 +121,9 @@ const RecipeProvider = ({ children }) => {
         recipesUser,
         setRecipeUser,
         loading,
+        selectedRecipe,
+        handleSelectedRecipe,
+        setSelectedRecipe,
       }}
     >
       {children}

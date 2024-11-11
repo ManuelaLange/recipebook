@@ -1,10 +1,10 @@
 "use client";
 import Form from "../components/Form";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { RecipeContext } from "../recipeContext";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../context";
-import { UserContext } from "../context";
+// import { UserContext } from "../context";
 import { MdOutlineHideImage } from "react-icons/md";
 
 // import { collection, getDocs, addDoc, getDoc, doc, query, where } from "firebase/firestore";
@@ -19,10 +19,11 @@ interface Recipe {
 
 export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
-  const { recipes, recipesUser } = useContext(RecipeContext);
+  const { recipes, recipesUser, handleSelectedRecipe } =
+    useContext(RecipeContext);
   const router = useRouter();
   const { search } = useContext(SearchContext);
-  const { userSession } = useContext(UserContext);
+  // const { userSession } = useContext(UserContext);
 
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
 
@@ -41,8 +42,9 @@ export default function Home() {
     SetModalNewRecipe(false);
   }
 
-  function handleRecipePage(recipe: { id: string; pageName: string }) {
+  function handleRecipePage(recipe: Recipe) {
     router.push(`/recipe/${recipe.pageName}`);
+    handleSelectedRecipe(recipe);
   }
 
   return (
@@ -69,9 +71,7 @@ export default function Home() {
           {searchRecipe.map((recipe: Recipe, index: number) => (
             <button
               key={index}
-              onClick={() =>
-                handleRecipePage({ id: recipe.id, pageName: recipe.pageName })
-              }
+              onClick={() => handleRecipePage(recipe)}
               className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
             >
               {recipe.img ? (
@@ -102,12 +102,7 @@ export default function Home() {
           {searchRecipeUser.map((recipe: Recipe, index: number) => (
             <button
               key={index}
-              onClick={() =>
-                handleRecipePage({
-                  id: recipe.id,
-                  pageName: recipe.pageName,
-                })
-              }
+              onClick={() => handleRecipePage(recipe)}
               className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
             >
               {recipe.img ? (
