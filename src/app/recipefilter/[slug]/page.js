@@ -10,7 +10,7 @@ import { IoMdArrowBack } from "react-icons/io";
 
 export default function Page({ params }) {
   const router = useRouter();
-  const { recipes, handleSelectedRecipe } = useContext(RecipeContext);
+  const { recipes } = useContext(RecipeContext);
   const { categoryRecipes } = useContext(CategoryContext);
   const { search } = useContext(SearchContext);
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
@@ -29,8 +29,7 @@ export default function Page({ params }) {
   );
 
   function handleRecipePage(recipe) {
-    router.push(`/recipe/${recipe.pageName}`);
-    handleSelectedRecipe(recipe);
+    router.push(`/recipe/${recipe.id}`);
   }
 
   return (
@@ -38,8 +37,19 @@ export default function Page({ params }) {
       <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24">
         <IoMdArrowBack
           className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/home")}
         />
+        <span
+          style={{
+            cursor: "pointer",
+            paddingLeft: "0.5em",
+            color: "#f97316",
+            hover: "#ea580c",
+          }}
+          onClick={() => router.push("/home")}
+        >
+          Voltar
+        </span>
       </div>
       <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
         <h1 className="my-3 font-semibold text-3xl text-orange-500">

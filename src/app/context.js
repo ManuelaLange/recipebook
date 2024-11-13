@@ -74,11 +74,9 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-// Adicionar loading na pagina da receita
-// logar com o google
 // colocar mensagens de sucesso ao longo do site
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
 // editar receita não salva no banco de dados
 // fazer pagina de cateogrias.
 // adicinar um icone de favoritos
-// aparecer o botão de editar apenas nas receitas do usuario
+// fazer pagina de acessar todas

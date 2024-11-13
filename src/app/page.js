@@ -5,11 +5,12 @@ import { useState, useContext, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { collection, doc, setDoc, query, where } from "firebase/firestore";
-import { auth, db } from "./configFirebase";
+import { auth, db, provider } from "./configFirebase";
 import { UserContext } from "./context";
-import { Loading } from "./components/Loading";
+import Loading from "./components/Loading";
 // import { v4 as uuidv4 } from "uuid";
 
 export default function Login() {
@@ -97,16 +98,31 @@ export default function Login() {
       } catch (e) {
         console.error("Error adding document: ", e);
       }
-      // localStorage.setItem("uid", userCredential.user.uid);
       router.push(`/home`);
-
-      // Aqui você pode redirecionar o usuário para uma página de sucesso ou perfil, etc.
     } catch (error) {
       console.log("Erro ao registrar usuário:", error);
     } finally {
       setLoadingVisible(false);
       setEmail("");
       setPassword("");
+    }
+  }
+
+  // login com google
+  async function signInWithGoogle() {
+    console.log("chamando");
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log("result", result);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      console.log("credential", credential);
+      const token = credential.accessToken;
+      const user = result.user;
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      const credential = GoogleAuthProvider.credentialFromError(error);
     }
   }
 
@@ -157,6 +173,14 @@ export default function Login() {
             >
               {!loadingVisible ? "Entrar" : <Loading />}
             </button>
+            <div className="text-center text-gray-600 mt-1">
+              <a
+                onClick={signInWithGoogle}
+                className="text-orange-500 hover:underline cursor-pointer"
+              >
+                Entrar com o Google
+              </a>
+            </div>
 
             <div className="text-center text-gray-600 mt-4">
               <p>Não possui conta?</p>
@@ -232,6 +256,7 @@ export default function Login() {
             >
               {!loadingVisible ? "Cadastrar e entrar" : <Loading />}
             </button>
+
             <div className="text-center text-gray-600 mt-1">
               <a
                 onClick={() => setIsNewLogin(false)}

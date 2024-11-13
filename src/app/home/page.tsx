@@ -19,8 +19,7 @@ interface Recipe {
 
 export default function Home() {
   const [modalNewRecipe, SetModalNewRecipe] = useState(false);
-  const { recipes, recipesUser, handleSelectedRecipe } =
-    useContext(RecipeContext);
+  const { recipes, recipesUser } = useContext(RecipeContext);
   const router = useRouter();
   const { search } = useContext(SearchContext);
   // const { userSession } = useContext(UserContext);
@@ -43,8 +42,7 @@ export default function Home() {
   }
 
   function handleRecipePage(recipe: Recipe) {
-    router.push(`/recipe/${recipe.pageName}`);
-    handleSelectedRecipe(recipe);
+    router.push(`/recipe/${recipe.id}`);
   }
 
   return (

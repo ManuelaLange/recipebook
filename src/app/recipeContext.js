@@ -1,14 +1,7 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  getDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { db } from "./configFirebase";
 import { UserContext } from "./context";
 import { v4 as uuidv4 } from "uuid";
@@ -19,8 +12,7 @@ const RecipeProvider = ({ children }) => {
   const { userSession } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
   const [recipesUser, setRecipeUser] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserRecipes = async () => {
     try {
@@ -30,7 +22,7 @@ const RecipeProvider = ({ children }) => {
       );
       const querySnapshot = await getDocs(recipesCollectionUser);
       const userRecipes = querySnapshot.docs.map((doc) => doc.data());
-      setLoading(true);
+      setLoading(false);
 
       setRecipeUser(userRecipes);
       console.log("receitas do usuário", userRecipes);
@@ -54,7 +46,7 @@ const RecipeProvider = ({ children }) => {
       const allRecipes = querySnapshot.docs.map((doc) => {
         return doc.data();
       });
-      setLoading(true);
+      setLoading(false);
 
       setRecipes(allRecipes);
     } catch (e) {
@@ -107,11 +99,6 @@ const RecipeProvider = ({ children }) => {
   //   );
   // }
 
-  function handleSelectedRecipe(recipe) {
-    setSelectedRecipe(recipe);
-  }
-  console.log("receita selecionada", selectedRecipe);
-
   return (
     <RecipeContext.Provider
       value={{
@@ -121,9 +108,6 @@ const RecipeProvider = ({ children }) => {
         recipesUser,
         setRecipeUser,
         loading,
-        selectedRecipe,
-        handleSelectedRecipe,
-        setSelectedRecipe,
       }}
     >
       {children}
