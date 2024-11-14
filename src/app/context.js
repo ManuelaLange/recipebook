@@ -80,3 +80,5 @@ export { UserProvider, UserContext };
 // fazer pagina de cateogrias.
 // adicinar um icone de favoritos
 // fazer pagina de acessar todas
+// colocar uma imagem nas receitas que não tem imagem 
+// organizar as receitas com conteúdo certo

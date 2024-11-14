@@ -16,13 +16,14 @@ import {
   query,
   where,
   getDocs,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../configFirebase";
 
 export default function Form({ closeModalFormRecipe, recipe }) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
-  const { addRecipe, recipes } = useContext(RecipeContext);
+  const { addRecipe, recipes, setRecipes } = useContext(RecipeContext);
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
@@ -194,11 +195,10 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     closeModalFormRecipe();
   }
 
-  function handleEditRecipe(e) {
+  async function handleEditRecipe(e) {
     e.preventDefault();
     console.log(editingRecipeId);
-    console.log(formData);
-    // const updatedRecipe = [...formData];
+    console.log('chamando primeira vez',formData);
 
     if (!editingRecipeId || !formData) {
       console.error("ID de receita ou dados do formulário ausentes.");
@@ -206,17 +206,16 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     }
 
     try {
-      const recipesCollection = collection(db, "recipes");
-      const q = query(recipesCollection, where("id", "==", editingRecipeId));
-
-      // Executa a consulta e obtém os documentos que correspondem ao filtro
-      const querySnapshot = getDocs(q);
-      const docRef = doc(db, "recipes", querySnapshot.docs[0]);
-      const recipe = async () => await updateDoc(docRef, formData);
-
-      console.log("Receita atualizada com sucesso:", recipe);
-    } catch (error) {
-      console.error("Erro ao atualizar a receita:", recipe);
+        // Atualize apenas os campos que estão em `formData`
+        const recipeRef = await updateDoc(doc(db, "recipes", editingRecipeId),formData)
+        console.log(recipeRef)
+        
+  
+        
+        console.log("Documento atualizado com sucesso!",recipeRef);
+      }
+    catch (error) {
+      console.error("Erro ao atualizar a receita:", error);
     }
 
     setEditingRecipeId(null);

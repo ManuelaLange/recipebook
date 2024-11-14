@@ -91,12 +91,10 @@ export default function Page({ params }) {
           </div>
           <div className="flex flex-row justify-between w-full items-center">
             <div
-              className="bg-center bg-cover mx-10 w-3/5 h-80"
-              style={{
-                backgroundImage: `url(${pageRecipe && pageRecipe.img})`,
-                borderRadius: "10%",
-              }}
-            ></div>
+              className="bg-center bg-cover mx-10 w-3/5 h-80">
+                {pageRecipe && pageRecipe.img && (
+                <img  src={pageRecipe.img}  alt="Recipe Image" className="rounded-lg " ></img>)}
+            </div>
             <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
               <div>
                 <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
