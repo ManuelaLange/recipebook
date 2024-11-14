@@ -52,7 +52,7 @@ export default function Page({ params }) {
             Voltar
           </span>
         </div>
-        {pageRecipe && pageRecipe.user_id === userSession.uid && (
+        {pageRecipe && pageRecipe.user_id === userSession && (
           <div className="flex flex-row gap-1">
             <span
               style={{

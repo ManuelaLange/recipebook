@@ -9,11 +9,20 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
 import { v4 as uuidv4 } from "uuid";
+import {
+  doc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../configFirebase";
 
 export default function Form({ closeModalFormRecipe, recipe }) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
-  const { addRecipe } = useContext(RecipeContext);
+  const { addRecipe, recipes } = useContext(RecipeContext);
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
@@ -185,12 +194,33 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     closeModalFormRecipe();
   }
 
-  function handleEditRecipe() {
-    editedRecipes(formData); // Atualiza o estado com a lista de receitas editada
+  function handleEditRecipe(e) {
+    e.preventDefault();
+    console.log(editingRecipeId);
+    console.log(formData);
+    // const updatedRecipe = [...formData];
+
+    if (!editingRecipeId || !formData) {
+      console.error("ID de receita ou dados do formulário ausentes.");
+      return;
+    }
+
+    try {
+      const recipesCollection = collection(db, "recipes");
+      const q = query(recipesCollection, where("id", "==", editingRecipeId));
+
+      // Executa a consulta e obtém os documentos que correspondem ao filtro
+      const querySnapshot = getDocs(q);
+      const docRef = doc(db, "recipes", querySnapshot.docs[0]);
+      const recipe = async () => await updateDoc(docRef, formData);
+
+      console.log("Receita atualizada com sucesso:", recipe);
+    } catch (error) {
+      console.error("Erro ao atualizar a receita:", recipe);
+    }
+
     setEditingRecipeId(null);
     closeModalFormRecipe();
-
-    console.log("receita atualizada", updatedRecipes);
   }
 
   const handleKeyDown = (event) => {
