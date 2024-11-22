@@ -1,7 +1,15 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { collection, getDocs, addDoc, query, where, setDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "./configFirebase";
 import { UserContext } from "./context";
 import { v4 as uuidv4 } from "uuid";
@@ -83,8 +91,7 @@ const RecipeProvider = ({ children }) => {
       img,
     };
     try {
-      const docRef = await setDoc (doc(db, "recipes", newRecipe.id), newRecipe)
-      // const docRef = await addDoc(collection(db, "recipes"), newRecipe);
+      const docRef = await setDoc(doc(db, "recipes", newRecipe.id), newRecipe);
       console.log("Document written with ID: ", docRef);
       setRecipeUser((prevRecipes) => [...prevRecipes, newRecipe]);
     } catch (e) {

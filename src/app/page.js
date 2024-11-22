@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
 import { collection, doc, setDoc, query, where } from "firebase/firestore";
 import { auth, db, provider } from "./configFirebase";

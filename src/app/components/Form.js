@@ -9,21 +9,17 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
 import { v4 as uuidv4 } from "uuid";
-import {
-  doc,
-  updateDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  setDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../configFirebase";
 
-export default function Form({ closeModalFormRecipe, recipe }) {
+export default function Form({
+  closeModalFormRecipe,
+  recipe,
+  handleModalSuccess,
+}) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
-  const { addRecipe, recipes, setRecipes } = useContext(RecipeContext);
+  const { addRecipe } = useContext(RecipeContext);
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
@@ -183,7 +179,6 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     addRecipe(formData);
 
     console.log("nova receita:", formData);
-
     setFormData({
       id: "",
       name: "",
@@ -193,12 +188,13 @@ export default function Form({ closeModalFormRecipe, recipe }) {
       instructions: [""],
     });
     closeModalFormRecipe();
+    handleModalSuccess();
   }
 
   async function handleEditRecipe(e) {
     e.preventDefault();
     console.log(editingRecipeId);
-    console.log('chamando primeira vez',formData);
+    console.log("chamando primeira vez", formData);
 
     if (!editingRecipeId || !formData) {
       console.error("ID de receita ou dados do formulário ausentes.");
@@ -206,15 +202,13 @@ export default function Form({ closeModalFormRecipe, recipe }) {
     }
 
     try {
-        // Atualize apenas os campos que estão em `formData`
-        const recipeRef = await updateDoc(doc(db, "recipes", editingRecipeId),formData)
-        console.log(recipeRef)
-        
-  
-        
-        console.log("Documento atualizado com sucesso!",recipeRef);
-      }
-    catch (error) {
+      // Atualize apenas os campos que estão em `formData`
+      const recipeRef = await updateDoc(
+        doc(db, "recipes", editingRecipeId),
+        formData
+      );
+      console.log("Documento atualizado com sucesso!", recipeRef);
+    } catch (error) {
       console.error("Erro ao atualizar a receita:", error);
     }
 

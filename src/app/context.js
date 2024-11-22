@@ -76,9 +76,8 @@ export { UserProvider, UserContext };
 
 // colocar mensagens de sucesso ao longo do site
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// editar receita não salva no banco de dados
 // fazer pagina de cateogrias.
 // adicinar um icone de favoritos
-// fazer pagina de acessar todas
-// colocar uma imagem nas receitas que não tem imagem 
-// organizar as receitas com conteúdo certo
+// deletar receita
+// colocar o login no header
+// fazer um componente para as receitas

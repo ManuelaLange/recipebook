@@ -26,6 +26,11 @@ export default function Page({ params }) {
   function closeFormEditRecipe() {
     setOpenModalEditForm(false);
   }
+  function handleModalSuccess() {
+    setTimeout(() => {
+      setModalSuccess(true);
+    }, 3000);
+  }
 
   function handleBackPage() {
     router.back();
@@ -90,10 +95,14 @@ export default function Page({ params }) {
             </h1>
           </div>
           <div className="flex flex-row justify-between w-full items-center">
-            <div
-              className="bg-center bg-cover mx-10 w-3/5 h-80">
-                {pageRecipe && pageRecipe.img && (
-                <img  src={pageRecipe.img}  alt="Recipe Image" className="rounded-lg " ></img>)}
+            <div className="bg-center bg-cover mx-10 w-3/5 h-80">
+              {pageRecipe && pageRecipe.img && (
+                <img
+                  src={pageRecipe.img}
+                  alt="Recipe Image"
+                  className="rounded-lg "
+                ></img>
+              )}
             </div>
             <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
               <div>
@@ -145,7 +154,11 @@ export default function Page({ params }) {
       )}
 
       {openModalEditForm && (
-        <Form recipe={pageRecipe} closeModalFormRecipe={closeFormEditRecipe} />
+        <Form
+          recipe={pageRecipe}
+          closeModalFormRecipe={closeFormEditRecipe}
+          handleModalSuccess={handleModalSuccess}
+        />
       )}
     </div>
   );
