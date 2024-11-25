@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { SearchContext } from "../context";
 import { MdOutlineHideImage } from "react-icons/md";
 import { IoMdArrowBack } from "react-icons/io";
+import CardRecipe from "../components/CardRecipe";
 
 export default function AllRecipesPage() {
   const router = useRouter();
@@ -24,19 +25,14 @@ export default function AllRecipesPage() {
   }
 
   return (
-    <div>
-      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24">
+    <div className="max-w-screen-lg m-auto">
+      <div className="flex flex-row w-min items-center pt-24 group cursor-pointer group">
         <IoMdArrowBack
-          className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
+          className=" w-6 h-6 font- cursor-pointer text-black group-hover:text-orange-600 "
           onClick={() => router.push("/home")}
         />
         <span
-          style={{
-            cursor: "pointer",
-            paddingLeft: "0.5em",
-            color: "#f97316",
-            hover: "#ea580c",
-          }}
+          className="pl-2 text-black group-hover:text-orange-600"
           onClick={() => router.push("/home")}
         >
           Voltar
@@ -49,24 +45,13 @@ export default function AllRecipesPage() {
       </div>
 
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        {searchRecipe.map((recipe) => {
+        {searchRecipe.map((recipe, index) => {
           return (
-            <button
-              key={recipe.id}
-              onClick={() => handleRecipePage(recipe)}
-              className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
-            >
-              {recipe.img ? (
-                <img
-                  className="w-36 h-28 rounded-lg"
-                  src={recipe.img}
-                  alt="Recipe Image"
-                />
-              ) : (
-                <MdOutlineHideImage className="w-14 h-14 rounded-lg text-gray-500" />
-              )}
-              <p>{recipe.name}</p>
-            </button>
+            <CardRecipe
+              key={index}
+              recipe={recipe}
+              handleRecipePage={handleRecipePage}
+            />
           );
         })}
       </div>

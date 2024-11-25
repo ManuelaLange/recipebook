@@ -5,7 +5,6 @@ export default function Menssage() {
       style={{
         maxWidth: "fit-content",
         marginLeft: "auto",
-        transition: "3s, linear 3s",
       }}
     >
       Receita enviada com sucesso!

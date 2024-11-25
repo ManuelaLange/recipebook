@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { SearchContext } from "../../context";
 import { MdOutlineHideImage } from "react-icons/md";
 import { IoMdArrowBack } from "react-icons/io";
+import CardRecipe from "@/app/components/CardRecipe";
 
 export default function Page({ params }) {
   const router = useRouter();
@@ -34,48 +35,32 @@ export default function Page({ params }) {
 
   return (
     <div>
-      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24">
+      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24 group">
         <IoMdArrowBack
-          className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
+          className=" w-6 h-6 text-black group-hover:text-orange-600 cursor-pointer"
           onClick={() => router.push("/home")}
         />
         <span
-          style={{
-            cursor: "pointer",
-            paddingLeft: "0.5em",
-            color: "#f97316",
-            hover: "#ea580c",
-          }}
+          className="pl-2 text-black group-hover:text-orange-600"
           onClick={() => router.push("/home")}
         >
           Voltar
         </span>
       </div>
-      <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
-        <h1 className="my-3 font-semibold text-3xl text-orange-500">
+      <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg mb-4">
+        <h1 className="my-3 font-semibold text-5xl text-orange-500">
           {pageCategory.name}
         </h1>
       </div>
 
       <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        {searchRecipe.map((recipe) => {
+        {searchRecipe.map((recipe, index) => {
           return (
-            <button
-              key={recipe.id}
-              onClick={() => handleRecipePage(recipe)}
-              className="flex flex-col gap-4 items-center border border-orange-500 p-4 rounded-lg font-semibold text-orange-500"
-            >
-              {recipe.img ? (
-                <img
-                  className="w-36 h-28 rounded-lg"
-                  src={recipe.img}
-                  alt="Recipe Image"
-                />
-              ) : (
-                <MdOutlineHideImage className="w-14 h-14 rounded-lg text-gray-500" />
-              )}
-              <p>{recipe.name}</p>
-            </button>
+            <CardRecipe
+              key={index}
+              recipe={recipe}
+              handleRecipePage={handleRecipePage}
+            />
           );
         })}
       </div>

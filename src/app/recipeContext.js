@@ -92,20 +92,13 @@ const RecipeProvider = ({ children }) => {
     };
     try {
       const docRef = await setDoc(doc(db, "recipes", newRecipe.id), newRecipe);
-      console.log("Document written with ID: ", docRef);
+      console.log("Document written with ID: ", newRecipe.id);
       setRecipeUser((prevRecipes) => [...prevRecipes, newRecipe]);
+      setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   }
-
-  // async function editedRecipes() {
-  //   const colRef = doc(db, "users", userSession, "recipes");
-
-  //   recipes.map((rec) =>
-  //     rec.id === editingRecipeId ? { ...rec, ...formData } : rec
-  //   );
-  // }
 
   return (
     <RecipeContext.Provider

@@ -7,6 +7,9 @@ import { BiEditAlt } from "react-icons/bi";
 import Form from "../../components/Form";
 import Loading from "../../components/Loading";
 import { UserContext } from "@/app/context";
+import { MdDeleteOutline, MdOutlineWatchLater } from "react-icons/md";
+import { FiTag } from "react-icons/fi";
+import { GoDotFill } from "react-icons/go";
 
 export default function Page({ params }) {
   const { loading, recipes } = useContext(RecipeContext);
@@ -26,54 +29,50 @@ export default function Page({ params }) {
   function closeFormEditRecipe() {
     setOpenModalEditForm(false);
   }
-  function handleModalSuccess() {
-    setTimeout(() => {
-      setModalSuccess(true);
-    }, 3000);
-  }
 
   function handleBackPage() {
     router.back();
   }
   console.log(pageRecipe);
+  function handleModalSuccess() {
+    setModalSuccess(true);
+  }
 
   return (
     <div>
-      <div className="flex flex-row justify-between pt-24 items-center max-w-screen-lg m-auto hover:text-orange-600">
-        <div className="flex flex-row">
-          <IoMdArrowBack
-            className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
-            onClick={() => handleBackPage()}
-          />
-          <span
-            style={{
-              cursor: "pointer",
-              paddingLeft: "0.5em",
-              color: "#f97316",
-              hover: "#ea580c",
-            }}
-            onClick={() => handleBackPage()}
-          >
+      <div className="flex flex-row justify-between pt-24 items-center max-w-screen-lg m-auto ">
+        <div
+          className="flex flex-row cursor-pointer items-center hover:text-orange-600 group"
+          onClick={() => handleBackPage()}
+        >
+          <IoMdArrowBack className=" w-6 h-6 text-black group-hover:text-orange-600" />
+          <span className="pl-2 text-black group-hover:text-orange-600">
             Voltar
           </span>
         </div>
         {pageRecipe && pageRecipe.user_id === userSession && (
-          <div className="flex flex-row gap-1">
-            <span
-              style={{
-                cursor: "pointer",
-                paddingLeft: "0.5em",
-                color: "#f97316",
-                hover: "#ea580c",
-              }}
-              onClick={openModalFormEditRecipe}
-            >
-              Editar receita
-            </span>
-            <BiEditAlt
-              className=" w-6 h-6 font- cursor-pointer text-orange-500 hover:text-orange-600 "
-              onClick={openModalFormEditRecipe}
-            />
+          <div className="flex flex-row gap-2 ">
+            <div className="flex flex-row gap-1 boder border-r-2 mb-2 cursor-pointer group">
+              <span
+                className="pl-2 text-black group-hover:text-orange-600"
+                onClick={openModalFormEditRecipe}
+              >
+                Editar receita
+              </span>
+              <BiEditAlt
+                className=" w-6 h-6 font- cursor-pointer text-black group-hover:text-orange-600 "
+                onClick={openModalFormEditRecipe}
+              />
+            </div>
+            <div className="flex flex-row gap-1 cursor-pointer group">
+              <span
+                className="pl-2 text-black group-hover:text-orange-600"
+                // onClick={openModalConfirmDeleteRecipe}
+              >
+                Deletar receita
+              </span>
+              <MdDeleteOutline className=" w-6 h-6 font- cursor-pointer text-black group-hover:text-orange-600 " />
+            </div>
           </div>
         )}
       </div>
@@ -82,66 +81,81 @@ export default function Page({ params }) {
           <Loading />
         </div>
       ) : (
-        <div className="flex flex-col items-center font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
-          <div>
-            <h1 className="my-3 font-semibold text-3xl text-orange-500">
+        <div className="grid-cols-2">
+          <div className="flex flex-col font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
+            <h1 className="my-3 mb-6 font-semibold text-5xl text-orange-500">
               {pageRecipe && pageRecipe.name}
             </h1>
-            <h1 className="mb-3 text-center text-base text-orange-500">
-              Categoria: {pageRecipe && pageRecipe.category}
-            </h1>
-            <h1 className="mb-3 text-center text-base text-orange-500">
-              Tempo de preparo: {pageRecipe && pageRecipe.time}
-            </h1>
-          </div>
-          <div className="flex flex-row justify-between w-full items-center">
-            <div className="bg-center bg-cover mx-10 w-3/5 h-80">
-              {pageRecipe && pageRecipe.img && (
-                <img
-                  src={pageRecipe.img}
-                  alt="Recipe Image"
-                  className="rounded-lg "
-                ></img>
-              )}
+            <div className="flex flex-row   gap-2  mb-3">
+              <div className="flex flex-row gap-2 border-r-2 pr-2 justify-center items-center">
+                <FiTag className="w-5 h-5" />
+                <h1 className="text-base text-black">
+                  {pageRecipe && pageRecipe.category}
+                </h1>
+              </div>
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <MdOutlineWatchLater className="w-5 h-5" />
+                <h1 className="text-base text-black">
+                  {pageRecipe && pageRecipe.time}
+                </h1>
+              </div>
             </div>
-            <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
+            <div className="flex flex-row gap-3">
+              <div className="bg-center bg-cover h-80">
+                {pageRecipe && pageRecipe.img && (
+                  <img
+                    src={pageRecipe.img}
+                    alt="Recipe Image"
+                    className="rounded-lg w-max h-full"
+                  ></img>
+                )}
+              </div>
+            </div>
+            <div className="p-3 my-4  w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
+              <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
+                Ingredientes
+              </h3>
+
+              <ul className="mx-10 grid grid-cols-2  ">
+                {pageRecipe &&
+                  pageRecipe.ingredients.map((ingredient, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-row gap-2 items-center"
+                      >
+                        <GoDotFill className="w-4 h-4 text-orange-500" />
+                        <li className=" flex m-1 justify-center ">
+                          {ingredient}
+                        </li>
+                      </div>
+                    );
+                  })}
+              </ul>
+            </div>
+
+            <div className="p-3 my-4 w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
               <div>
                 <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
-                  Ingredientes
+                  Modo de preparo
                 </h3>
-                <ul className="custom-list list-[disc] mx-10 ">
+                <ol className="custom-list list-[decimal] mx-10 ">
                   {pageRecipe &&
-                    pageRecipe.ingredients.map((ingredient) => {
+                    pageRecipe.instructions.map((instruction) => {
                       return (
-                        <li key={ingredient} className="boder border-b-2 mb-2 ">
-                          {ingredient}
+                        <li
+                          key={instruction}
+                          className="boder border-b-2 mb-2 "
+                        >
+                          {instruction}
                         </li>
                       );
                     })}
-                </ul>
+                </ol>
               </div>
             </div>
-          </div>
-
-          <div className="p-3 my-4 m-auto w-3/4 rounded-lg border border-orange-500 bg-neutral-100">
-            <div>
-              <h3 className="my-3 font-semibold text-lg text-orange-500 text-center">
-                Modo de preparo
-              </h3>
-              <ol className="custom-list list-[decimal] mx-10 ">
-                {pageRecipe &&
-                  pageRecipe.instructions.map((instruction) => {
-                    return (
-                      <li key={instruction} className="boder border-b-2 mb-2 ">
-                        {instruction}
-                      </li>
-                    );
-                  })}
-              </ol>
-            </div>
-          </div>
-          <style>
-            {`
+            <style>
+              {`
           .custom-list li::marker {
             color: #ff6600; 
             font-size: 1.5rem; 
@@ -149,7 +163,11 @@ export default function Page({ params }) {
              
           }
         `}
-          </style>
+            </style>
+          </div>
+          <aside className="sticky-colums">
+            <h1>Comentários</h1>
+          </aside>
         </div>
       )}
 

@@ -193,8 +193,6 @@ export default function Form({
 
   async function handleEditRecipe(e) {
     e.preventDefault();
-    console.log(editingRecipeId);
-    console.log("chamando primeira vez", formData);
 
     if (!editingRecipeId || !formData) {
       console.error("ID de receita ou dados do formulário ausentes.");
@@ -214,6 +212,7 @@ export default function Form({
 
     setEditingRecipeId(null);
     closeModalFormRecipe();
+    handleModalSuccess();
   }
 
   const handleKeyDown = (event) => {
