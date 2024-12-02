@@ -8,7 +8,14 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { collection, doc, setDoc, query, where } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db, provider } from "./configFirebase";
 import { UserContext } from "./context";
 import Loading from "./components/Loading";
@@ -18,16 +25,16 @@ export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { userSession, refreshSession } = useContext(UserContext);
+  const { userSession, refreshSession, userProfile } = useContext(UserContext);
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
   const [loadingVisible, setLoadingVisible] = useState(false);
 
-  const accessToken = query(
-    collection(db, "users"),
-    where("uid", "==", userSession)
-  );
+  // const accessToken = query(
+  //   collection(db, "users"),
+  //   where("uid", "==", userSession)
+  // );
   // useEffect(() => {
   //   if (accessToken.exists()) {
   //     router.push(`/home`);
@@ -106,6 +113,8 @@ export default function Login() {
       setLoadingVisible(false);
       setEmail("");
       setPassword("");
+      SetName("");
+      SetLastname("");
     }
   }
 

@@ -1,31 +1,21 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { CategoryContext } from "../categoryContext";
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect } from "react";
 import { FaBook, FaRegUser } from "react-icons/fa";
-import { GoChevronDown } from "react-icons/go";
+// import { GoChevronDown } from "react-icons/go";
 import { IoLogOutOutline } from "react-icons/io5";
 // import { RecipeContext } from "../recipeContext";
 import { SearchContext, UserContext } from "../context";
 
 export default function Header() {
-  const [isDropdownMenuOpen, setIsDropdownOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef(null);
   const router = useRouter();
   const { categoryRecipes } = useContext(CategoryContext);
   // const { recipes } = useContext(RecipeContext);
   const { search, setSearch } = useContext(SearchContext);
-  const { userSession, setUserSession, userProfile } = useContext(UserContext);
-
-  function toggleDropdown() {
-    setIsDropdownOpen((prevState) => !prevState);
-  }
-  function logout() {
-    router.push("/");
-    setUserSession(null);
-  }
-  console.log(userSession);
+  const { userSession, userProfile, handleLogout } = useContext(UserContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,7 +45,7 @@ export default function Header() {
         />
 
         <ul className="flex space-x-6 text-orange-500 font-semibold">
-          {categoryRecipes.slice(0, 5).map((category) => {
+          {categoryRecipes.map((category) => {
             return (
               <li
                 key={category.title}
@@ -66,46 +56,6 @@ export default function Header() {
               </li>
             );
           })}
-          {categoryRecipes.length > 5 && (
-            <div
-              ref={divRef}
-              className="relative inline-block text-left justify-center"
-            >
-              <button
-                onClick={toggleDropdown}
-                className="inline-flex justify-center w-full rounded-md  text-sm font-medium text-orange-500 hover:text-orange-600 cursor-pointer"
-              >
-                Mais{" "}
-                <GoChevronDown className="ml-0.5 flex size-5 items-center" />
-              </button>
-              {isDropdownMenuOpen && (
-                <div className="origin-top-right absolute right-50 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div
-                    className="py-1"
-                    aria-orientation="vertical"
-                    aria-labelledby="options-menu"
-                  >
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-orange-500 "
-                    >
-                      {categoryRecipes.slice(5).map((category) => {
-                        return (
-                          <li
-                            key={category.title}
-                            className="cursor-pointer hover:text-orange-600 mb-2  border-b-2 divide-indigo-500"
-                            onClick={() => handleFilterRecipePage(category)}
-                          >
-                            {category.name}
-                          </li>
-                        );
-                      })}
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </ul>
       </div>
 
@@ -124,18 +74,18 @@ export default function Header() {
           {!userProfile ? (
             <p className="text-orange-500">(sem nome)</p>
           ) : (
-            <p className="text-orange-500">{userProfile}</p>
+            <p className="text-orange-500">{userProfile.username}</p>
           )}
 
           <FaRegUser
-            // onClick={() => router.push("/profile")}
+            onClick={() => router.push("/profileUser")}
             className="hover:text-orange-600 cursor-pointer"
             size={22}
             style={{ color: "#f97316" }}
           />
         </div>
         <IoLogOutOutline
-          onClick={logout}
+          onClick={handleLogout}
           className="hover:text-orange-600 cursor-pointer"
           size={24}
           style={{ color: "#f97316" }}

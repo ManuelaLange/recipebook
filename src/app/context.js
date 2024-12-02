@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect } from "react";
 import { auth, db } from "./configFirebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 // Context para barra de pesquisa
 const SearchContext = createContext();
@@ -17,12 +18,13 @@ const SearchProvider = ({ children }) => {
 };
 export { SearchProvider, SearchContext };
 
-// Context para o userSession
+// Context para o userContext
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [userSession, setUserSession] = useState("");
-  const [userProfile, setUserProfile] = useState("");
+  const [userProfile, setUserProfile] = useState([""]);
+  const router = useRouter();
 
   useEffect(() => {
     profileUser();
@@ -83,10 +85,18 @@ const UserProvider = ({ children }) => {
         return;
       }
 
-      setUserProfile(userProfile1.data().username);
+      setUserProfile(userProfile1.data());
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
+  };
+  console.log("userProfile", userProfile);
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    setUserSession("");
+    setUserProfile("");
+    router.push("/");
   };
 
   return (
@@ -97,6 +107,7 @@ const UserProvider = ({ children }) => {
         refreshSession,
         profileUser,
         userProfile,
+        handleLogout,
       }}
     >
       {children}
@@ -105,11 +116,8 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-// deletar receita
-// colocar carregamento na pagina de todas as receitas
-// colocar mensagens de sucesso ao longo do site
+// usar o toast do react-hot-toast para criar mensagens de sucesso, principalmente na pagina do perfil.
+// colocar uuma opção do usuario atualizar todas as receitas com o seu novo nome, ou fazer automaticamente, quando ele atualizar o nome e sobrenome.
+// pagina com todas as receitas do usuários
 // enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// fazer pagina do perfil do usuario
-// usuario logado com o google não tem como colocar o nome e sobrenome.
-// adicinar um icone de favoritos
-// fazer pagina de favoritos
+// usuario logado com o google não tem como colocar o nome e sobrenome, fazer um rota para que apareça um segundo formulário.

@@ -4,7 +4,6 @@ import { createContext, useState, useContext, useEffect } from "react";
 import {
   collection,
   getDocs,
-  addDoc,
   query,
   where,
   setDoc,
@@ -81,6 +80,7 @@ const RecipeProvider = ({ children }) => {
     const newRecipe = {
       id: uuidv4(),
       user_id: userSession,
+      user_name: userProfile.username,
       category,
       categoryValue,
       ingredients,

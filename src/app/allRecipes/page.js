@@ -8,10 +8,11 @@ import { SearchContext } from "../context";
 import { MdOutlineHideImage } from "react-icons/md";
 import { IoMdArrowBack } from "react-icons/io";
 import CardRecipe from "../components/CardRecipe";
+import Loading from "../components/Loading";
 
 export default function AllRecipesPage() {
   const router = useRouter();
-  const { recipes } = useContext(RecipeContext);
+  const { recipes, loading } = useContext(RecipeContext);
   const { categoryRecipes } = useContext(CategoryContext);
   const { search } = useContext(SearchContext);
   const lowerSearch = search.toLowerCase(); // tirar do looping de busca para não ser feito essa processo toda vez que o input chamar o onchange, isso melhora a performance.
@@ -43,18 +44,25 @@ export default function AllRecipesPage() {
           Todas as receitas
         </h1>
       </div>
-
-      <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
-        {searchRecipe.map((recipe, index) => {
-          return (
-            <CardRecipe
-              key={index}
-              recipe={recipe}
-              handleRecipePage={handleRecipePage}
-            />
-          );
-        })}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg min-h-[200px]">
+          <div className="flex items-center justify-center col-span-4">
+            <Loading />
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-8 mx-auto mb-4 max-w-screen-lg ">
+          {searchRecipe.map((recipe, index) => {
+            return (
+              <CardRecipe
+                key={index}
+                recipe={recipe}
+                handleRecipePage={handleRecipePage}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

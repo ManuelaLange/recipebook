@@ -10,12 +10,14 @@ import { UserContext } from "@/app/context";
 import { MdDeleteOutline, MdOutlineWatchLater } from "react-icons/md";
 import { FiTag } from "react-icons/fi";
 import { GoDotFill } from "react-icons/go";
+import DeletRecipe from "../../components/DeletRecipe";
 
 export default function Page({ params }) {
   const { loading, recipes } = useContext(RecipeContext);
   const router = useRouter();
   const resolvedParams = use(params);
   const { userSession } = useContext(UserContext);
+  const [openModalDeletRecipe, setOpenModalDeletRecipe] = useState(false);
 
   const pageRecipe = recipes.find(
     (recipe) => recipe.id === resolvedParams.slug
@@ -34,8 +36,16 @@ export default function Page({ params }) {
     router.back();
   }
   console.log(pageRecipe);
+
   function handleModalSuccess() {
     setModalSuccess(true);
+  }
+
+  function handleDeletRecipe() {
+    setOpenModalDeletRecipe(true);
+  }
+  function closeModalDeletRecipe() {
+    setOpenModalDeletRecipe(false);
   }
 
   return (
@@ -67,7 +77,7 @@ export default function Page({ params }) {
             <div className="flex flex-row gap-1 cursor-pointer group">
               <span
                 className="pl-2 text-black group-hover:text-orange-600"
-                // onClick={openModalConfirmDeleteRecipe}
+                onClick={handleDeletRecipe}
               >
                 Deletar receita
               </span>
@@ -176,6 +186,12 @@ export default function Page({ params }) {
           recipe={pageRecipe}
           closeModalFormRecipe={closeFormEditRecipe}
           handleModalSuccess={handleModalSuccess}
+        />
+      )}
+      {openModalDeletRecipe && (
+        <DeletRecipe
+          closeModalDeletRecipe={closeModalDeletRecipe}
+          recipe={pageRecipe}
         />
       )}
     </div>

@@ -4,13 +4,18 @@ import { useState, useContext } from "react";
 import { RecipeContext } from "../recipeContext";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../context";
-import { UserContext } from "../context";
-import { MdOutlineHideImage, MdArrowForwardIos } from "react-icons/md";
+// import { UserContext } from "../context";
+import { MdArrowForwardIos } from "react-icons/md";
 import Menssage from "../components/Menssage";
 import Loading from "../components/Loading";
 // import { collection, getDocs, addDoc, getDoc, doc, query, where } from "firebase/firestore";
 // import { db } from "../configFirebase";
 import CardRecipe from "../components/CardRecipe";
+import { getDocs } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import { getDoc, updateDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
+import { db } from "../configFirebase";
 
 interface Recipe {
   id: string;
@@ -137,14 +142,6 @@ export default function Home() {
           ))}
         </div>
       )}
-      <div className="flex flex-col items-center py-2 font-[family-name:var(--font-geist-sans)] m-auto max-w-screen-lg">
-        <button
-          onClick={NewRecipe}
-          className="bg-orange-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-orange-400"
-        >
-          Adicione a sua receita
-        </button>
-      </div>
 
       {modalNewRecipe && (
         <Form
