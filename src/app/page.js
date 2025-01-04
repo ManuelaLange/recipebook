@@ -8,14 +8,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import {
-  doc,
-  setDoc,
-  collection,
-  getDocs,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db, provider } from "./configFirebase";
 import { UserContext } from "./context";
 import Loading from "./components/Loading";
@@ -25,7 +18,7 @@ export default function Login() {
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { userSession, refreshSession, userProfile } = useContext(UserContext);
+  const { userSession, refreshSession } = useContext(UserContext);
   const router = useRouter();
   const [name, SetName] = useState("");
   const [lastname, SetLastname] = useState("");
@@ -120,14 +113,22 @@ export default function Login() {
 
   // login com google
   async function signInWithGoogle() {
-    console.log("chamando");
     try {
       const result = await signInWithPopup(auth, provider);
       console.log("result", result);
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      console.log("credential", credential);
-      const token = credential.accessToken;
-      const user = result.user;
+      const userGoogle = result.user;
+
+      if (!userGoogle.uid.exists()) {
+        const collectionRef = doc(db, "users", userGoogle.uid);
+
+        const newuserGoogle = {
+          username: userGoogle.displayName,
+          email: userGoogle.email,
+        };
+        await setDoc(collectionRef, newuserGoogle);
+        console.log("usuário cadastrado com o google: ", newuserGoogle);
+      }
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

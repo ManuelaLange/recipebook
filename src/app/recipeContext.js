@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 const RecipeContext = createContext();
 
 const RecipeProvider = ({ children }) => {
-  const { userSession } = useContext(UserContext);
+  const { userSession, userProfile } = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
   const [recipesUser, setRecipeUser] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,12 +75,14 @@ const RecipeProvider = ({ children }) => {
     instructions,
     img,
   }) {
-    const pageName = name.toLowerCase().replace(/\s+/g, "-"); // converte o nome para um formato URL-friendly
-    const categoryValue = category.toLowerCase().replace(/\s+/g, "-"); // transforma a categoria em lowercase para fins de consistência
+    const pageName = name.toLowerCase().replace(/\s+/g, "-");
+    const categoryValue = category.toLowerCase().replace(/\s+/g, "-");
+    const user_name = userProfile.username || "Anônimo";
+
     const newRecipe = {
       id: uuidv4(),
       user_id: userSession,
-      user_name: userProfile.username,
+      userName: user_name,
       category,
       categoryValue,
       ingredients,

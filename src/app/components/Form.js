@@ -19,7 +19,7 @@ export default function Form({
 }) {
   const [isEditable, setIsEditable] = useState(false); // para saber se o formulário é para uma nova receita ou se é para edição de uma receita.
   const { categoryRecipes } = useContext(CategoryContext);
-  const { addRecipe } = useContext(RecipeContext);
+  const { addRecipe, setRecipes, setRecipeUser } = useContext(RecipeContext);
 
   const [formData, setFormData] = useState({
     id: uuidv4(),
@@ -200,19 +200,28 @@ export default function Form({
     }
 
     try {
-      // Atualize apenas os campos que estão em `formData`
-      const recipeRef = await updateDoc(
-        doc(db, "recipes", editingRecipeId),
-        formData
+      // Update Firestore
+      await updateDoc(doc(db, "recipes", editingRecipeId), formData);
+
+      // Update local state
+      setRecipes((prevRecipes) =>
+        prevRecipes.map((recipe) =>
+          recipe.id === editingRecipeId ? formData : recipe
+        )
       );
-      console.log("Documento atualizado com sucesso!", recipeRef);
+
+      setRecipeUser((prevRecipes) =>
+        prevRecipes.map((recipe) =>
+          recipe.id === editingRecipeId ? formData : recipe
+        )
+      );
+
+      setEditingRecipeId(null);
+      closeModalFormRecipe();
+      handleModalSuccess();
     } catch (error) {
       console.error("Erro ao atualizar a receita:", error);
     }
-
-    setEditingRecipeId(null);
-    closeModalFormRecipe();
-    handleModalSuccess();
   }
 
   const handleKeyDown = (event) => {

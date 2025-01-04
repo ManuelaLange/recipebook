@@ -1,16 +1,13 @@
 import { MdOutlineHideImage } from "react-icons/md";
 import { LuChefHat } from "react-icons/lu";
-import { useContext } from "react";
-import { RecipeContext } from "../recipeContext";
 
 export default function CardRecipe({ recipe, handleRecipePage }) {
-  const { recipes } = useContext(RecipeContext);
   return (
     <>
       <div
         key={recipe.id}
         onClick={() => handleRecipePage(recipe)}
-        className="flex font-[family-name:var(--font-geist-sans)] flex-col gap-4 border cursor-pointer border-orange-500 rounded-md "
+        className="flex min-h-64 font-[family-name:var(--font-geist-sans)] flex-col gap-4 border cursor-pointer border-orange-500 rounded-md "
       >
         {recipe.img ? (
           <img className="w-full h-full" src={recipe.img} alt="Recipe Image" />
@@ -23,7 +20,7 @@ export default function CardRecipe({ recipe, handleRecipePage }) {
           </p>
           <div className="flex flex-row gap-2">
             <LuChefHat className="w-5 h-5 text-orange-500" />
-            <p>{recipe.user_name}</p>
+            <p>{recipe.user_name ? recipe.user_name : "Anônimo"}</p>
           </div>
         </div>
       </div>

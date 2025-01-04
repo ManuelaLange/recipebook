@@ -1,19 +1,25 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { CategoryContext } from "../categoryContext";
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect, useState } from "react";
 import { FaBook, FaRegUser } from "react-icons/fa";
-// import { GoChevronDown } from "react-icons/go";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { IoLogOutOutline } from "react-icons/io5";
 // import { RecipeContext } from "../recipeContext";
 import { SearchContext, UserContext } from "../context";
 
 export default function Header() {
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef(null);
   const router = useRouter();
   const { categoryRecipes } = useContext(CategoryContext);
-  // const { recipes } = useContext(RecipeContext);
   const { search, setSearch } = useContext(SearchContext);
   const { userSession, userProfile, handleLogout } = useContext(UserContext);
 
@@ -35,7 +41,7 @@ export default function Header() {
 
   if (!userSession) return <div className="h-12 w-full"></div>;
   return (
-    <header className="h-16 bg-orange-100 flex items-center justify-between">
+    <header className="h-16 bg-orange-100 flex items-center justify-between  fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center space-x-6 mx-6">
         <FaBook
           onClick={() => router.push("/home")}
@@ -58,38 +64,52 @@ export default function Header() {
           })}
         </ul>
       </div>
-
-      <div className="flex items-center mx-6 gap-2">
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="px-4 py-1 border rounded-lg text-gray-600"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button className="bg-orange-500 text-white px-4 py-1 rounded-lg hover:bg-orange-400">
-          Pesquisar
-        </button>
-        <div className="flex flex-row gap-2 border-r-2 p-2">
-          {!userProfile ? (
-            <p className="text-orange-500">(sem nome)</p>
-          ) : (
-            <p className="text-orange-500">{userProfile.username}</p>
-          )}
-
-          <FaRegUser
-            onClick={() => router.push("/profileUser")}
-            className="hover:text-orange-600 cursor-pointer"
-            size={22}
-            style={{ color: "#f97316" }}
+      <div className="flex flex-row gap-5 ">
+        <div className="flex items-center gap-2 border-r border-gray-300 pr-3">
+          <input
+            type="text"
+            placeholder="Buscar..."
+            className="px-4 py-1 border rounded-lg text-gray-600"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
+          <button className="bg-orange-500 text-white px-4 py-1 rounded-lg hover:bg-orange-400">
+            Pesquisar
+          </button>
         </div>
-        <IoLogOutOutline
-          onClick={handleLogout}
-          className="hover:text-orange-600 cursor-pointer"
-          size={24}
-          style={{ color: "#f97316" }}
-        />
+        <div className="flex flex-row gap-2 p-2 mr-3 group">
+          <DropdownMenu
+            className="flex flex-row gap-2 p-2 group"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <DropdownMenuTrigger className="flex flex-row gap-2 ">
+              {!userProfile ? (
+                <p className="text-orange-500 cursor-pointer">(sem nome)</p>
+              ) : (
+                <p className="text-orange-500 cursor-pointer">
+                  {userProfile.username}
+                </p>
+              )}
+              <FaRegUser
+                className="cursor-pointer"
+                size={22}
+                style={{ color: "#f97316" }}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mt-4 mr-3 w-44 text-center">
+              <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => router.push("/profileUser")}>
+                <FaRegUser style={{ color: "#f97316" }} />
+                Meu perfil
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <IoLogOutOutline style={{ color: "#f97316" }} />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

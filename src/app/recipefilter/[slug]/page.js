@@ -35,13 +35,13 @@ export default function Page({ params }) {
 
   return (
     <div>
-      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-24 group">
+      <div className="flex flex-row items-center m-auto max-w-screen-lg pt-28 group">
         <IoMdArrowBack
           className=" w-6 h-6 text-black group-hover:text-orange-600 cursor-pointer"
           onClick={() => router.push("/home")}
         />
         <span
-          className="pl-2 text-black group-hover:text-orange-600"
+          className="pl-2 text-black group-hover:text-orange-600 cursor-pointer"
           onClick={() => router.push("/home")}
         >
           Voltar

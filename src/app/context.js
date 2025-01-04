@@ -34,7 +34,6 @@ const UserProvider = ({ children }) => {
         try {
           const token = await user.getIdToken();
           const tokenResult = await user.getIdTokenResult();
-          console.log(tokenResult);
 
           // Check token expiration
           if (new Date().getTime() / 1000 > tokenResult.expirationTime) {
@@ -116,8 +115,4 @@ const UserProvider = ({ children }) => {
 };
 export { UserProvider, UserContext };
 
-// usar o toast do react-hot-toast para criar mensagens de sucesso, principalmente na pagina do perfil.
-// colocar uuma opção do usuario atualizar todas as receitas com o seu novo nome, ou fazer automaticamente, quando ele atualizar o nome e sobrenome.
-// pagina com todas as receitas do usuários
-// enter nao ta funcionando no formulario de editar, ver oq ta acontecendo
-// usuario logado com o google não tem como colocar o nome e sobrenome, fazer um rota para que apareça um segundo formulário.
+// Fazer com que ao  atualizar nome e sobrenome, atualize automaticamente as receitas com o novo nome.
