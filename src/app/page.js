@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  getDoc,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, provider } from "./configFirebase";
@@ -116,20 +117,32 @@ export default function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const userGoogle = result.user;
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      if (!userGoogle.uid.exists()) {
+
+      // Check if user exists in Firestore
+      const userDoc = await getDoc(doc(db, "users", userGoogle.uid));
+
+      if (!userDoc.exists()) {
+        // Create new user document if it doesn't exist
         const collectionRef = doc(db, "users", userGoogle.uid);
         const newuserGoogle = {
           username: userGoogle.displayName,
           email: userGoogle.email,
+          createdAt: new Date(),
         };
         await setDoc(collectionRef, newuserGoogle);
-        console.log("usuário cadastrado com o google: ", newuserGoogle);
       }
+
+      // Redirect to home page after successful sign in
+      router.push("/home");
     } catch (error) {
-      console.error("Google sign-in error:", error);
+      if (error.code === "auth/cancelled-popup-request") {
+        console.log("Popup was closed before authentication completed");
+      } else if (error.code === "auth/popup-blocked") {
+        console.log("Popup was blocked by the browser");
+        // You might want to show a message to the user here
+      } else {
+        console.error("Google sign-in error:", error);
+      }
     }
   }
 
