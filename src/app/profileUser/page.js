@@ -54,8 +54,7 @@ export default function ProfileUser() {
       // Atualize apenas os campos que estão em `profileData`
       const idUser = userSession;
       console.log("idUser", idUser);
-      const userRef = await updateDoc(doc(db, "users", idUser), profileData);
-
+      await updateDoc(doc(db, "users", idUser), profileData);
       setMessageConfirmEditProfile(true);
       console.log(
         "Documento atualizado com sucesso!",

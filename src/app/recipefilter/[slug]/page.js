@@ -6,7 +6,6 @@ import { CategoryContext } from "@/app/categoryContext";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../../context";
 import { MdOutlineHideImage } from "react-icons/md";
-import { IoMdArrowBack } from "react-icons/io";
 import CardRecipe from "@/app/components/CardRecipe";
 
 export default function Page({ params }) {
@@ -36,10 +35,6 @@ export default function Page({ params }) {
   return (
     <div>
       <div className="flex flex-row items-center m-auto max-w-screen-lg pt-28 group">
-        <IoMdArrowBack
-          className=" w-6 h-6 text-black group-hover:text-orange-600 cursor-pointer"
-          onClick={() => router.push("/home")}
-        />
         <span
           className="pl-2 text-black group-hover:text-orange-600 cursor-pointer"
           onClick={() => router.push("/home")}

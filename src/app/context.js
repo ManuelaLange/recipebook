@@ -32,7 +32,6 @@ const UserProvider = ({ children }) => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         try {
-          const token = await user.getIdToken();
           const tokenResult = await user.getIdTokenResult();
 
           // Check token expiration

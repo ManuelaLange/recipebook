@@ -115,13 +115,10 @@ export default function Login() {
   async function signInWithGoogle() {
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log("result", result);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
       const userGoogle = result.user;
 
       if (!userGoogle.uid.exists()) {
         const collectionRef = doc(db, "users", userGoogle.uid);
-
         const newuserGoogle = {
           username: userGoogle.displayName,
           email: userGoogle.email,
@@ -130,10 +127,7 @@ export default function Login() {
         console.log("usuário cadastrado com o google: ", newuserGoogle);
       }
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      const credential = GoogleAuthProvider.credentialFromError(error);
+      console.error("Google sign-in error:", error);
     }
   }
 
