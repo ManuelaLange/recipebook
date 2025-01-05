@@ -116,7 +116,7 @@ export default function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const userGoogle = result.user;
-
+      const credential = GoogleAuthProvider.credentialFromResult(result);
       if (!userGoogle.uid.exists()) {
         const collectionRef = doc(db, "users", userGoogle.uid);
         const newuserGoogle = {
